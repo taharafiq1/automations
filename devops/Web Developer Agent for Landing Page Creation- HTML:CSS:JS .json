@@ -1,0 +1,372 @@
+{
+  "name": "Web Developer Agent - Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Detail for business to create a complete Converting and Highly engaging are as follows. Create a stunning webpage.\n\nBusiness Name: {{ $json.body.businessName }}\n\nBusiness URL: {{ $json.body.businessURL }}\n\nBusiness Category: {{ $json.body.businessCategory }}\n\nBrand Colors: {{ $json.body.brandColors }}\n\nBrand Voice for Content & Copywriting: {{ $json.body.brandVoice }}\n\n\nMake sure all the sections are Conversion Optimized & in a proper flow so each section resonates with the other.\n\nFurther Instructions: {{ $json.body.instructions }}\n",
+        "options": {
+          "systemMessage": "=You are a CRO expert and web developer. You creare highly engaging, mobile responsive, conversion focused webpages. Create a complete page:\n\n\nREQUIREMENTS:\n1. Analyze business and create content strategy\n2. Design responsive layout with CRO best practices\n3. Generate complete HTML with inline CSS/JS\n4. Optimize for Elementor HTML widget\n5. Include: sections that are required for Business Category as per latest CRO practices\n6. Minimum usage of Resource intensive scripts (But use where you think may enhance engagement and conversions)\n\nImportant:\nComplete HTML code ready to paste in Elementor\n(Do not provide any explanation or anything else other than just pure HTML code)\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        80,
+        192
+      ],
+      "id": "e426f6e4-dea4-4b02-8fdc-89c700e6438b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        -112
+      ],
+      "id": "a32ca529-1ae5-4363-bff1-e42260d38d2e",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "f28d2af1-5c35-4faf-8d4d-180351a04d5b",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        -112
+      ],
+      "id": "aac59d3f-601c-420d-b514-16941ccba93c",
+      "name": "Webhook",
+      "webhookId": "f28d2af1-5c35-4faf-8d4d-180351a04d5b"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get AI output from whichever agent was executed\nlet aiOutput;\n\n// Check which AI agent was executed based on the workflow path\n// Use try-catch to safely check for executed nodes\ntry {\n  if ($('AI Agent1').first() && $('AI Agent1').first().json && $('AI Agent1').first().json.output) {\n    aiOutput = $('AI Agent1').first().json.output;\n  } else {\n    aiOutput = $('AI Agent').first().json.output;\n  }\n} catch (error) {\n  // If AI Agent1 wasn't executed, use AI Agent\n  aiOutput = $('AI Agent').first().json.output;\n}\n\n// Get the Google Drive file info\nconst driveFile = $node[\"Upload file\"].json;\n\n// Extract HTML from markdown if needed\nlet htmlCode = aiOutput;\nif (htmlCode.includes('```html')) {\n  htmlCode = htmlCode.split('```html')[1].split('```')[0].trim();\n}\n\n// Create the response structure\nconst response = {\n  status: \"success\",\n  htmlCode: htmlCode,\n  downloadUrl: driveFile.webContentLink || driveFile.webViewLink || null,\n  message: \"Website generated successfully!\"\n};\n\n// Return as single object, not array\nreturn response;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        -112
+      ],
+      "id": "a0a45c17-a186-4daf-9275-d43f4049d1fd",
+      "name": "Format Response"
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        864,
+        -112
+      ],
+      "id": "9f49ec87-993f-4c5b-9bca-760bd886816e",
+      "name": "Share file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Ka0I8AH04iOX6YEb",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are modifying an existing website based on user feedback. Here are the details:\n\nORIGINAL WEBSITE CODE:\n{{ $json.body.originalCode }}\n\nMODIFICATION REQUEST:\n{{ $json.body.tweakPrompt }}",
+        "options": {
+          "systemMessage": "=You are a CRO expert and web developer. You creare highly engaging, mobile responsive, conversion focused webpages. Create a complete page:\n\n\nREQUIREMENTS:\n1. Analyze business and create content strategy\n2. Design responsive layout with CRO best practices\n3. Generate complete HTML with inline CSS/JS\n4. Optimize for Elementor HTML widget\n5. Include: sections that are required for Business Category as per latest CRO practices\n6. Minimum usage of Resource intensive scripts (But use where you think may enhance engagement and conversions)\n\nImportant:\nComplete HTML code ready to paste in Elementor\n(Do not provide any explanation or anything else other than just pure HTML code)\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        64,
+        -368
+      ],
+      "id": "ec78cba0-d003-4832-b77f-02f4e79c7c39",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d0df1ba9-bcfb-44e6-acef-81e1fa0cfebd",
+              "leftValue": "={{ $json.body.tweakPrompt }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        -112
+      ],
+      "id": "76db8f0e-442d-44e3-99cf-c553f4759955",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Webhook').item.json.body.businessName }}-{{ $now.format('dd-MM-yy-hh:mm:ss') }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "14POVkqbC4uXG7Po6ATmZCS7WwH_W9JoF",
+          "mode": "list",
+          "cachedResultName": "HTML Files",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/14POVkqbC4uXG7Po6ATmZCS7WwH_W9JoF"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        640,
+        -112
+      ],
+      "id": "c3bd09e0-9594-4c8a-a25d-05c35b096082",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Ka0I8AH04iOX6YEb",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5",
+          "mode": "list",
+          "cachedResultName": "gpt-5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        -96
+      ],
+      "id": "062b8ac8-774a-45b6-81b0-68d23e57e329",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.srv795962.hstgr.cloud",
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+            "content-length": "973",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9",
+            "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryHPrZ7LLHAJNROAWa",
+            "origin": "https://taharafiq.online",
+            "priority": "u=1, i",
+            "referer": "https://taharafiq.online/",
+            "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"macOS\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "n8n.srv795962.hstgr.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "bc933941e715",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "businessName": "Two Core AI",
+            "businessURL": "https://twocore.ai",
+            "tagline": "",
+            "businessCategory": "AI Automation Agency",
+            "targetCustomers": "SMB Business that requires automation for their tedious tasks",
+            "brandColors": "#06b6d4 & #f97316",
+            "brandVoice": "professional",
+            "instructions": ""
+          },
+          "webhookUrl": "https://n8n.srv795962.hstgr.cloud/webhook/f28d2af1-5c35-4faf-8d4d-180351a04d5b",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        []
+      ]
+    },
+    "Share file": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Share file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "PbHR0Z5zx7xRFk9v"
+  },
+  "versionId": "31700c74-aa84-4677-8af3-9a32c461a055",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "HBLTNOVKCACSSwbd",
+  "tags": []
+}

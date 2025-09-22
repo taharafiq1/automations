@@ -1,0 +1,704 @@
+{
+  "name": "Viral LinkedIn Post Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Template Provider Code Node\n// Purpose: Provide specific template based on selected structure from Topic Enhancer\n\nconst input = $input.first().json;\n\n// Parse the AI output properly\nlet parsedInput;\ntry {\n  // Check if input is the AI output format with text property\n  if (Array.isArray(input) && input[0] && input[0].text) {\n    parsedInput = JSON.parse(input[0].text);\n  } else if (input.text) {\n    parsedInput = JSON.parse(input.text);\n  } else {\n    // Input is already parsed JSON\n    parsedInput = input;\n  }\n} catch (error) {\n  // Fallback if parsing fails\n  parsedInput = input;\n}\n\nconst selectedStructure = parsedInput.selected_structure;\n\n// Define all viral post templates based on successful LinkedIn posts analysis\nconst templates = {\n  \n  contradiction_hook: {\n    name: \"Contradiction Hook\",\n    description: \"Challenge conventional wisdom with shocking counter-evidence\",\n    structure: `CONTRADICTION_HOOK TEMPLATE:\n\nOPENING FORMULA:\n- Start with: \"[INDUSTRY] sold you a LIE\" OR \"Everything you know about [TOPIC] is WRONG\"\n- Alternative: \"The [INDUSTRY] doesn't want you to know this BRUTAL truth\"\n\nCONTENT STRUCTURE:\n1. CONTRARIAN STATEMENT: Bold claim that challenges popular belief\n2. SHOCKING EVIDENCE: Include 2-3 specific statistics/data points that support your position\n3. EXAMPLES SECTION: Provide 3-4 concrete examples of companies/people succeeding by ignoring conventional wisdom\n4. TRUTH REVELATION: Explain why the conventional approach is flawed/harmful\n5. MEMORABLE CONCLUSION: Punchy statement that reinforces your contrarian position\n\nEMOTIONAL TRIGGERS TO USE:\n- \"BRUTAL truth\"\n- \"don't want you to know\"\n- \"Here's what they're hiding\"\n- \"The uncomfortable reality\"\n- ALL CAPS for emphasis (LIE, WRONG, DESTROYED)\n\nEXAMPLE PATTERN:\n\"[Industry] sold you a LIE.\n'[Popular belief]'\nHere's what they don't want you to know:\n[Shocking statistic 1]\n[Shocking statistic 2]\n[Shocking statistic 3]\n\nBut let's look at the ACTUAL data:\n[Counter-example with specific metrics]\n\nThe most successful [companies/people] in history:\n- [Example 1]: [Specific detail]\n- [Example 2]: [Specific detail]  \n- [Example 3]: [Specific detail]\n\nMeanwhile, [contrarian examples]:\n[Supporting evidence]\n\nThe UNCOMFORTABLE TRUTH: [Final insight]\"\n\nREQUIREMENTS:\n- Include specific financial figures and company names\n- Use aggressive, confident tone\n- Target C-level executives with authority positioning\n- Create genuine controversy without being inflammatory\n- Length: 1500-2000 characters`,\n    \n    viral_elements: [\"Shock value\", \"Authority challenge\", \"Data-driven\", \"Contrarian positioning\"]\n  },\n\n  client_story: {\n    name: \"Client Story\",\n    description: \"Real transformation story with specific metrics and universal lessons\",\n    structure: `CLIENT_STORY TEMPLATE:\n\nOPENING FORMULA:\n- \"A [role] came to me [emotional state]: '[Direct quote with problem]'\"\n- \"Just got off a call with [client type], and I had to share this story\"\n- \"I met a [role] who was [dramatic situation]\"\n\nCONTENT STRUCTURE:\n1. DRAMATIC OPENING: Client's desperate situation or problem\n2. BACKGROUND SETUP: Specific details about their situation (industry, size, previous attempts)\n3. PROBLEM IDENTIFICATION: The exact mistake/challenge they were facing\n4. SOLUTION IMPLEMENTATION: Step-by-step framework or approach you used\n5. TRANSFORMATION METRICS: Shocking before/after numbers with timeframes\n6. CLIENT QUOTE: Memorable statement from the client about the experience\n7. UNIVERSAL PRINCIPLE: Broader lesson that applies to all readers\n\nCREDIBILITY ELEMENTS:\n- Specific industry details\n- Exact timeframes (30 days, 4 months, etc.)\n- Precise metrics (percentages, dollar amounts, user counts)\n- Named frameworks or methodologies\n- Real quotes (can be paraphrased but feel authentic)\n\nEXAMPLE PATTERN:\n\"A [role] came to me desperate: '[Problem quote]'\n\n[His/Her] [situation had]:\n- [Specific detail 1]\n- [Specific detail 2]\n- [Specific detail 3]\n\nBut [core problem description].\n\nWe implemented the '[Framework name]':\n- [Solution step 1]\n- [Solution step 2]\n- [Solution step 3]\n\nResult: Within [timeframe], [transformation outcome].\n\n[Specific metric]: [Before] → [After]\n[Another metric]: [Before] → [After]\n\n[Client] texted me: '[Memorable quote about the transformation]'\n\nSometimes [universal insight/principle].\"\n\nEMOTIONAL PROGRESSION:\n- Start with desperation/frustration\n- Build tension with problem details\n- Provide hope with solution\n- Deliver satisfaction with results\n- End with wisdom/insight\n\nREQUIREMENTS:\n- Use real-sounding scenarios (can be composite/anonymized)\n- Include specific numbers and timeframes\n- Show clear problem → solution → result progression\n- End with universally applicable principle\n- Length: 1500-2000 characters`,\n    \n    viral_elements: [\"Social proof\", \"Transformation metrics\", \"Relatability\", \"Credibility building\"]\n  },\n\n  hidden_genius: {\n    name: \"Hidden Genius\",\n    description: \"Highlight undervalued expert while criticizing celebrated figures\",\n    structure: `HIDDEN_GENIUS TEMPLATE:\n\nOPENING FORMULA:\n- \"[PERSON] is the most UNDERVALUED [TITLE] alive\"\n- \"This goes against EVERYTHING the [industry] ecosystem preaches\"\n- \"While everyone worships [popular figures], [hidden person] makes them look like amateurs\"\n\nCONTENT STRUCTURE:\n1. BOLD OPENING: Declare someone as undervalued/overlooked\n2. CONTRARIAN SETUP: Challenge what the industry typically celebrates\n3. POPULAR FIGURE CRITICISM: Call out who gets undeserved attention\n4. CREDENTIALS SHOWCASE: List impressive achievements of your hidden genius\n5. UNFAIR COMPARISON: Show how hidden person's contributions surpass famous ones\n6. RECOGNITION GAP: Explain the disparity between contribution and recognition\n7. UNIVERSAL INSIGHT: Broader truth about recognition vs. real value\n\nCREDENTIAL PRESENTATION:\n- Use specific achievements with ages/timeframes\n- Include competition results, technical accomplishments\n- Show progression of achievements\n- Compare directly to famous figures' accomplishments\n- Include financial impact/ownership stakes\n\nEXAMPLE PATTERN:\n\"[Name] is the most UNDERVALUED [title] alive.\n\nThis goes against EVERYTHING the [industry] celebrity ecosystem preaches.\n\nEvery [platform] worships: '[Popular figures list]'\n\n[Industry] media everywhere: 'Same [number] billionaires on repeat!'\n\nBut here's the BRUTAL truth about the [role] who built the foundations of modern [industry]:\n\n[Name] makes your favorite '[title]' look like amateurs.\n\nTHE RESUME THAT DESTROYS LEGENDS:\n\nWHILE OTHER 'GENIUSES' WERE GETTING ATTENTION:\n- [Achievement 1 with specific details]\n- [Achievement 2 with specific details]\n- [Achievement 3 with specific details]\n\nWHILE [FAMOUS PERSON] GETS CREDIT:\n- [Real person] was [actual role/contribution]\n- [Specific technical contribution]\n- [Financial stake/outcome]\n- Gets ZERO recognition for [specific achievement]\n\nThe most INSANE part of [his/her] story:\n[Shocking achievement or decision]\n\nTHE UNCOMFORTABLE TRUTH:\nThe best [professionals] don't become celebrities.\nThey become the invisible foundations that celebrities stand on.\n\n[Conclusion about recognition vs. real impact]\"\n\nEMOTIONAL ELEMENTS:\n- Righteous indignation about unfair recognition\n- Admiration for technical excellence\n- Frustration with celebrity worship\n- Respect for real contribution\n\nREQUIREMENTS:\n- Research real but underrecognized figures\n- Include specific technical achievements\n- Show clear contrast with overrated celebrities\n- Use reverent but angry tone\n- Length: 1500-2000 characters`,\n    \n    viral_elements: [\"Contrarian hero worship\", \"Authority revelation\", \"Injustice framing\", \"Insider knowledge\"]\n  },\n\n  myth_busting: {\n    name: \"Myth Busting\",\n    description: \"Destroy harmful conventional practices with personal anecdotes\",\n    structure: `MYTH_BUSTING TEMPLATE:\n\nOPENING FORMULA:\n- \"I've [STRONG ACTION] more [THINGS] with [APPROACH] than [OPPOSITE APPROACH]\"\n- \"I just [DESTROYED/KILLED/ENDED] the myth that [common belief]\"\n- \"Everything you've been taught about [topic] will [negative outcome]\"\n\nCONTENT STRUCTURE:\n1. BOLD CLAIM: Strong statement about your experience destroying something\n2. SPECIFIC ANECDOTE: Real story that illustrates the widespread problem\n3. PROBLEM BREAKDOWN: Detailed analysis of why the conventional approach is flawed\n4. REVELATION MOMENT: The exact moment when the truth became clear\n5. HARM EXPLANATION: Why the common approach is actually damaging\n6. WISDOM STATEMENT: Universal principle about destroying bad ideas early\n\nANECDOTE ELEMENTS:\n- Specific setting and context\n- Real person or situation (can be composite)\n- Moment of realization\n- Clear before/after contrast\n- Emotional impact on the person involved\n\nEXAMPLE PATTERN:\n\"I've [ACTION] more [THINGS] with [METHOD] than [OPPOSITE METHOD].\n\nYesterday, I met a [person] who was [situation].\n\n[He/She] showed me [specific example of the problem].\n\nI asked the question that ended everything:\n'[Critical question that exposes the flaw]'\n\n[Response that reveals the problem]\n\nThat's when [he/she] realized [the fatal flaw].\n\n[Detailed explanation of why the approach doesn't work]\n\nBut here's the real tragedy:\nWithout that question, [he/she]'d have spent [time period] [negative outcome].\n\n[Description of wasted resources/effort]\n\nThis is why [people] hate good advice.\nIt kills [positive-sounding thing] instantly.\n\nBut that's exactly why it's valuable.\nBetter to kill a bad idea in [short time] than let it kill [long time] of your life.\n\nSometimes the best thing you can do for a [person] is destroy their favorite [thing].\"\n\nPSYCHOLOGICAL DYNAMICS:\n- Position yourself as the truth-teller\n- Show compassion for the misguided person\n- Demonstrate superior insight\n- Provide valuable reality check\n\nTONE ELEMENTS:\n- Confident but not arrogant\n- Helpful destruction\n- Wise but firm\n- Protective of people's time/resources\n\nREQUIREMENTS:\n- Use realistic scenarios that readers can relate to\n- Show clear logical progression\n- Include specific examples of harm prevented\n- Position advice-giving as valuable service\n- Length: 1500-2000 characters`,\n    \n    viral_elements: [\"Wisdom positioning\", \"Reality check\", \"Protective authority\", \"Valuable destruction\"]\n  },\n\n  investment_opportunity: {\n    name: \"Investment Opportunity\", \n    description: \"Exclusive insider investment opportunity with urgency and scarcity\",\n    structure: `INVESTMENT_OPPORTUNITY TEMPLATE:\n\nOPENING FORMULA:\n- \"If you have $[AMOUNT] sitting in your bank account, this will be the most important post you read this year\"\n- \"I just discovered a [investment type] that will make early Bitcoin investors look foolish\"\n- \"Yesterday I met [number] [professionals] who [dramatic action]. Now they're building [opportunity]\"\n\nCONTENT STRUCTURE:\n1. COMPELLING HOOK: Dollar amount + importance claim\n2. DISCOVERY STORY: How you found this opportunity through personal connection\n3. INSIDER KNOWLEDGE: Specific industry information that others don't know\n4. OPPORTUNITY BREAKDOWN: Financial mathematics showing the potential\n5. CREDIBILITY PROOF: Background/credentials of key people involved\n6. SIMPLE MATH: Easy calculation showing the opportunity size\n7. URGENCY/SCARCITY: Time-sensitive elements and limited availability\n8. CLEAR CTA: Specific action with conditions\n\nFINANCIAL ELEMENTS:\n- Specific dollar amounts for investment minimums\n- Current market size with projections\n- Manufacturing costs vs. selling prices\n- Revenue multiples and growth rates\n- Competitor pricing and market share\n\nEXAMPLE PATTERN:\n\"If you have $[amount] sitting in your bank account, this will be the most important post you read this year.\n\nYesterday I met [number] [professionals] who spent [time period] building [products] for [companies].\n\nThen they all quit. At the same time.\n\nNow they're building their own version.\n\nThe [product] they've been building for [time period]?\nCosts $[amount] to manufacture.\nSells for $[amount].\nOnly [number] companies in the world know how to build it.\n\nUntil now.\n\n[Customer] buys these things like they're buying coffee.\n[Quantity] per year.\nAt $[amount] each.\nFrom the same [number] companies.\nBecause they literally have no other choice.\n\nThese [number] [professionals] aren't just 'former employees.'\nThey're the ones who DESIGNED the original blueprints.\nThey know every component.\nEvery supplier.\nEvery manufacturing shortcut.\n\nThey're not asking for millions.\nThey need [amount] to finish their prototype.\nThat's it.\n\nThe math is stupid simple:\n- $[market size] market\n- [number] current players  \n- Unlimited demand in [location]\n- Team that built the competition\n- $[amount] gets you in\n\nThe window is tiny.\nOnce they finish their prototype, this becomes a [location]-only opportunity.\nAnd their investment minimums [higher amount].\n\nComment '[keyword]' and I'll make the introduction.\nBut only if you can move fast.\nThese aren't the type of [professionals] who wait around.\nThey've been waiting [time period] already.\"\n\nPSYCHOLOGICAL TRIGGERS:\n- Exclusivity and insider access\n- FOMO (fear of missing out)\n- Social proof (successful track record)\n- Scarcity (limited time/spots)\n- Authority (insider knowledge)\n\nREQUIREMENTS:\n- Use realistic but exciting scenarios\n- Include specific financial projections\n- Show clear market opportunity\n- Create genuine urgency without being misleading\n- Provide clear next steps\n- Length: 1500-2000 characters`,\n    \n    viral_elements: [\"FOMO creation\", \"Exclusivity\", \"Financial opportunity\", \"Insider access\"]\n  }\n};\n\n// Get the selected template\nconst selectedTemplate = templates[selectedStructure];\n\nif (!selectedTemplate) {\n  // Fallback to contradiction_hook if structure not found\n  const fallbackTemplate = templates.contradiction_hook;\n  return [{\n    json: {\n      ...input,\n      template: fallbackTemplate.structure,\n      template_name: fallbackTemplate.name,\n      template_description: fallbackTemplate.description,\n      viral_elements: fallbackTemplate.viral_elements,\n      structure_selected: selectedStructure,\n      fallback_used: true,\n      error: `Template for ${selectedStructure} not found, using contradiction_hook fallback`\n    }\n  }];\n}\n\n// Return the input data plus the selected template\nreturn [{\n  json: {\n    ...input,\n    enhanced_topic: parsedInput.enhanced_topic,\n    template: selectedTemplate.structure,\n    template_name: selectedTemplate.name,\n    template_description: selectedTemplate.description,\n    viral_elements: selectedTemplate.viral_elements,\n    structure_selected: selectedStructure,\n    fallback_used: false\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        -160
+      ],
+      "id": "421946cf-7f5f-4ddf-935d-90a69eff83ab",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        -256
+      ],
+      "id": "98560f95-9e43-4cc7-9cd6-a0c4762ebb10",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0",
+          "mode": "list",
+          "cachedResultName": "Untitled spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Topics",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Pending"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        160,
+        -160
+      ],
+      "id": "2030fd63-f4a7-4bec-b396-b1d8fdb9e55e",
+      "name": "Get Topic",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\n\nINPUT TOPIC: {{ $json.Topic }}\n\nYour tasks:\n1. ENHANCE the topic into a viral angle using these approaches:\n   - Contrarian take (challenge conventional wisdom)\n   - Personal story angle (client transformation)\n   - Hidden opportunity (investment/business opportunity)\n   - Myth-busting (destroy common beliefs)\n   - Overlooked genius (highlight undervalued person/company)\n\n2. SELECT the suitable structure type:\n\n   - client_story: For transformation stories\n   - investment_opportunity: For financial opportunities\n   - myth_busting: For destroying misconceptions\n   - hidden_genius: For highlighting overlooked value\n \n\n3. CREATE an enhanced topic title that fits the selected structure\n\nEXAMPLES:\nInput: \"future of AI automation\"\nOutput: {\n  \"enhanced_topic\": \"How AI Automation is changing the Tech Dynamics\",\n  \"selected_structure\": \"hidden_genius\",\n  \"reasoning\": \"AI automation represents a massive  opportunity that most people are sleeping on\"\n}\n\nInput: \"remote work productivity\"\nOutput: {\n  \"enhanced_topic\": \"Remote work productivity gurus sold you a LIE - and it's destroying your team\",\n  \"selected_structure\": \"contradiction_hook\", \n  \"reasoning\": \"Challenges popular remote work advice with contrarian perspective\"\n}\n\nRespond with JSON only:\n{\n  \"enhanced_topic\": \"[Viral angle of the topic]\",\n  \"selected_structure\": \"[Structure type]\",\n  \"reasoning\": \"[Why this structure fits]\",\n  \"viral_potential\": \"[1-10 score]\"\n}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a viral content strategist. Transform simple topics into compelling, viral LinkedIn post angles and select the best structure."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        384,
+        -160
+      ],
+      "id": "5d8f6949-b709-406f-a7df-8aa80b9941cd",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -64
+      ],
+      "id": "ac7a4aeb-d59f-4138-b4ef-8f13c0484199",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create engaging content using the enhanced topic and structure provided.\n\nENHANCED TOPIC: {{ $json.enhanced_topic }}\nSTRUCTURE: {{ $json.structure_selected }}\nTEMPLATE: {{ $json.template }}\n\nWORKFLOW:\n1. Use Perplexity tool to gather factual data relevant to the topic\n2. Use Grok tool to analyze current sentiment and find contrarian angles\n3. Create viral LinkedIn post following the template structure\n4. Generate 4-5 alternative hooks\n\nAvailable tools:\n- perplexity_search: For factual research, statistics, company data\n- grok_sentiment: For industry opinions, controversies, sentiment analysis\n\nCall tools as needed, then create the final post.\n\nRequirements:\n- Follow the provided template structure exactly\n- Include specific numbers and company names from research\n- Use emotional triggers and controversial angles\n- Target C-level executives\n- 1500-2000 characters for main post\n- Generate 4-5 hook variations\n\nOutput format:\n{\n  \"main_post\": \"[Complete viral post]\",\n  \"hook_variations\": [\"hook1\", \"hook2\", \"hook3\", \"hook4\", \"hook5\"],\n  \"research_summary\": \"[Key findings used]\",\n  \"controversy_level\": \"[1-10]\",\n  \"key_stats\": [\"stat1\", \"stat2\", \"stat3\"]\n}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a viral LinkedIn content creator with access to research tools."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        -160
+      ],
+      "id": "a6e7b89a-4b46-4d3c-9344-9424bc3cf075",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Search for recent factual data, statistics, financial figures, company performance metrics, and market analysis for viral business content",
+        "model": "sonar",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        64
+      ],
+      "id": "af93fd72-4480-486c-a9c0-d5ca17fec7be",
+      "name": "Perplexity_search",
+      "credentials": {
+        "perplexityApi": {
+          "id": "rR8FQ9RkeTQ9Jccl",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-sonnet-4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        912,
+        64
+      ],
+      "id": "49b3e932-9407-40dc-838e-3192a6fb0ef1",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UHvg8n6n1dmTkvyp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Analyze industry sentiment, find contrarian perspectives, identify popular beliefs to challenge, discover overlooked experts, and uncover emotional triggers for viral LinkedIn content targeting C-level executives",
+        "method": "POST",
+        "url": "https://api.x.ai/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "grokApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $fromAI(\"topic\") }}\"\n    }\n  ],\n  \"model\": \"grok-3\",\n  \"stream\": false,\n  \"temperature\": 0.7\n \n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        64
+      ],
+      "id": "6e098069-1d7c-4805-9fee-55ac1a90f228",
+      "name": "Grok_Sentiment",
+      "credentials": {
+        "grokApi": {
+          "id": "56hT7G9oagP7zqsO",
+          "name": "Grok account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"main_post\": \"Complete viral post\",\n  \n  \"hook1\": \"hook1\",\n  \"hook2\": \"hook2\",\n  \"hook3\" : \"hook3\",\n  \"hook4\" : \"hook4\",\n  \"hook5\" : \"hook2\",\n  \n  \"research_summary\": \"Key findings used\",\n  \n  \"controversy_level\": \"[1-10]\",\n  \"key_stats\": [\"stat1\", \"stat2\", \"stat3\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1344,
+        64
+      ],
+      "id": "040db59e-e742-4411-a273-a3d8beb52de1",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0",
+          "mode": "list",
+          "cachedResultName": "Viral Linkedin Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 137081424,
+          "mode": "list",
+          "cachedResultName": "Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0/edit#gid=137081424"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Original Topic": "={{ $('Get Topic').item.json.Topic }}",
+            "Enhanced Topic": "={{ $('Code').item.json.enhanced_topic }}",
+            "Structure": "={{ $('Code').item.json.template_name }}",
+            "Main Post": "={{ $json.output.main_post }}",
+            "Hook_1": "={{ $json.output.hook1 }}",
+            "Hook_2": "={{ $json.output.hook2 }}",
+            "Hook_3": "={{ $json.output.hook3 }}",
+            "Hook_4": "={{ $json.output.hook4 }}",
+            "Hook_5": "={{ $json.output.hook5 }}",
+            "Research Summary": "={{ $json.output.research_summary }}",
+            "Controversy Level": "={{ $json.output.controversy_level }}",
+            "Key Stats": "={{ $json.output.key_stats[0] }}\n\n{{ $json.output.key_stats[1] }}\n\n{{ $json.output.key_stats[2] }}\n\n{{ $json.output.key_stats[3] }}\n\n{{ $json.output.key_stats[4] }}",
+            "Generated Date": "={{$now.format('dd-MMM-yyyy')}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Original Topic",
+              "displayName": "Original Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Enhanced Topic",
+              "displayName": "Enhanced Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Structure",
+              "displayName": "Structure",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Main Post",
+              "displayName": "Main Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hook_1",
+              "displayName": "Hook_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hook_2",
+              "displayName": "Hook_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hook_3",
+              "displayName": "Hook_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hook_4",
+              "displayName": "Hook_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hook_5",
+              "displayName": "Hook_5",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Research Summary",
+              "displayName": "Research Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentiment Insight",
+              "displayName": "Sentiment Insight",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Controversy Level",
+              "displayName": "Controversy Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Key Stats",
+              "displayName": "Key Stats",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Viral Elements",
+              "displayName": "Viral Elements",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Character Count",
+              "displayName": "Character Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated Date",
+              "displayName": "Generated Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Post Date",
+              "displayName": "Post Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1520,
+        -160
+      ],
+      "id": "d16408e3-f301-4286-90bb-ef3332da41a0",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0",
+          "mode": "list",
+          "cachedResultName": "Viral Linkedin Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Topics",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AZ3hbwp3F3vw239jCwBB5b3YdCuRSt22hzWLaGzknC0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic": "={{ $('Get Topic').item.json.Topic }}",
+            "Status": "Generated",
+            "Structure Used": "={{ $json.Structure }}",
+            "Date Processed": "={{ $now.format('dd-MMM-yyyy') }}"
+          },
+          "matchingColumns": [
+            "Topic"
+          ],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Structure Used",
+              "displayName": "Structure Used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date Processed",
+              "displayName": "Date Processed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1744,
+        -160
+      ],
+      "id": "98e04f5a-3d93-4047-9d14-e1f2178c6673",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "grok-3-fast",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatXAiGrok",
+      "typeVersion": 1,
+      "position": [
+        464,
+        64
+      ],
+      "id": "78c2d4d9-a7ec-463c-ae1d-1f8395b84c72",
+      "name": "xAI Grok Chat Model",
+      "credentials": {
+        "xAiApi": {
+          "id": "yKRHwn7sP6rQSYqC",
+          "name": "xAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Topic": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity_search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grok_Sentiment": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "xAI Grok Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2cd3064b-916d-4320-b951-4d05b6733424",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "DrJnAksFEyadY826",
+  "tags": []
+}

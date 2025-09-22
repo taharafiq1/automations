@@ -1,0 +1,323 @@
+{
+  "name": "Demo-Voice Call Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        -128
+      ],
+      "id": "6bdbd3b1-3278-448e-b8dd-303d0bbc3734",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.vapi.ai/call",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_VAPI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"phoneNumberId\": \"723b278f-b482-43f0-ab24-3f453e4a4b4c\",\n  \"assistantId\": \"1ac85c9b-d76d-4be9-8d44-bbc74658881a\",\n  \"customer\": {\n    \"number\": \"+1{{ $json.phone_number }}\"\n  },\n  \"type\": \"outboundPhoneCall\",\n  \"assistant\": {\n        \"name\": \"Will\",\n        \"voice\": {\n          \"provider\": \"vapi\",\n          \"voiceId\": \"Kylie\"\n        },\n        \"firstMessageMode\": \"assistant-waits-for-user\",\n        \"backgroundSound\": \"off\",\n        \"firstMessage\": \"{{ $json.vapi_voice_call_first_message }}\",\n        \"model\": {\n        \"provider\": \"openai\",\n        \"model\": \"gpt-4.1-mini\",\n        \"messages\": [\n          {\n            \"role\": \"system\",\n            \"content\": \" {{ $json.vapi_voice_call_context_prompt }}\"\n        }]\n      }\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        -128
+      ],
+      "id": "c2412761-6047-4690-94de-6cc3a9ba1082",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "=  https://api.vapi.ai/call/{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_VAPI_API_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        944,
+        -128
+      ],
+      "id": "67646ac9-dd1b-4192-a230-6d86138336d9",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1168,
+        -208
+      ],
+      "id": "fd667fda-ea4c-4caf-838f-a0e67edb25e2",
+      "name": "Wait",
+      "webhookId": "59fb23df-b7cd-4984-bb43-6b915413af49"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6317e9c3-fc74-4080-b8af-f24a00c1789b",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "ended",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1392,
+        -128
+      ],
+      "id": "25b47adf-e7b9-4b52-8aea-296ce738b9e9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33999b2c-11b6-41b4-b2c0-9ba40d2cf3f7",
+              "name": "call_transcript",
+              "value": "={{ $json.transcript }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1600,
+        -128
+      ],
+      "id": "271903c7-fc7e-4f50-8d3e-707bfadd1363",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=details for call today: \n{{ $json.query }}",
+        "options": {
+          "systemMessage": "=You're Taha's intelligent voice AI bot that is fantastic at creating prompts and opening call lines for Vapi outbound calls to schedule all types of meetings and appointments, such as barbershops, dinners, etc. for Mr. Taha and anyone who Taha asks like his barber etc.\n\n##Rules\n- The voice agent must sound happy, nice and upbeat. The conversation should be more casual but keep it short.\n- The voice agent must be as detailed as possible so that Vapi can understand everything about the call and context.\n\nStrictly output the response in valid JSON format in 3 text fields. DO NOT PUT THIS INTO AN OBJECT. Only use the two text fields as exactly shown below:\n\n{  \nphone_number: \"\",\nvapi_voice_call_first_message: \"\",\nvapi_voice_call_context_prompt: \"\"\n}\n\nEnsure the response is correctly formatted as JSON, including the curly braces, key names, and values. Do not omit or modify any part of the structure."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        144,
+        -128
+      ],
+      "id": "0562c9d3-55b5-4740-8b4e-3cf675718351",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        96
+      ],
+      "id": "edcfd227-51c4-42d9-9c1d-a216b5a2c229",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.item.json.output;\n\n// Extract values using regex (safe, no JSON.parse required)\nconst phoneMatch = input.match(/phone_number:\\s*\"(.*?)\"/);\nconst firstMessageMatch = input.match(/vapi_voice_call_first_message:\\s*\"(.*?)\"/);\nconst contextPromptMatch = input.match(/vapi_voice_call_context_prompt:\\s*\"(.*?)\"/);\n\nreturn [\n  {\n    json: {\n      phone_number: phoneMatch ? phoneMatch[1] : null,\n      vapi_voice_call_first_message: firstMessageMatch ? firstMessageMatch[1] : null,\n      vapi_voice_call_context_prompt: contextPromptMatch ? contextPromptMatch[1] : null\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        -128
+      ],
+      "id": "4df9680a-7d03-4153-bb17-bbb4c7551f3f",
+      "name": "Code"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "Call barber John at 5205254749 to ask for appointment for a haircut today after 6 pm anytime he is free",
+          "special_request_required": false
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b5984e98-f7c2-4d44-8cbd-e549663bdea1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "DRzyW71r37XvG4up",
+  "tags": [
+    {
+      "createdAt": "2025-07-22T16:59:12.530Z",
+      "updatedAt": "2025-07-22T16:59:12.530Z",
+      "id": "FeHPkoSNpYMzbcT0",
+      "name": "Demo"
+    }
+  ]
+}

@@ -1,0 +1,408 @@
+{
+  "name": "Domain Name Checker",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "89ea642f-e0f6-4c14-a7dc-a85493c5dfbc",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1IsYb3vs_Lyz1LHHINSdkYqFKza5FoCkw_wiOVGiT7hs/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1826170038,
+          "mode": "list",
+          "cachedResultName": "New to check",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IsYb3vs_Lyz1LHHINSdkYqFKza5FoCkw_wiOVGiT7hs/edit#gid=1826170038"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        224,
+        0
+      ],
+      "id": "8c2066ac-ebd5-4c71-84c8-6e73035e4cd6",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 200,
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "c1750634-16cc-4896-8b1c-c1caac5e50c9",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "url": "https://domainr.p.rapidapi.com/v2/status",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "domain",
+              "value": "={{ $json['Domain '] }}.ai"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-key",
+              "value": "YOUR_API_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1024,
+        32
+      ],
+      "id": "1961d9e5-0b8a-42d8-82fd-f98faf3c37f4",
+      "name": "HTTP Request",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        640,
+        0
+      ],
+      "id": "5cef1431-a66a-4bb8-9b9e-1e8b9fbe2a83",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1IsYb3vs_Lyz1LHHINSdkYqFKza5FoCkw_wiOVGiT7hs",
+          "mode": "list",
+          "cachedResultName": "Untitled spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IsYb3vs_Lyz1LHHINSdkYqFKza5FoCkw_wiOVGiT7hs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1826170038,
+          "mode": "list",
+          "cachedResultName": "New to check",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IsYb3vs_Lyz1LHHINSdkYqFKza5FoCkw_wiOVGiT7hs/edit#gid=1826170038"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $json.status[0].status }}",
+            "Summary": "={{ $json.status[0].summary }}",
+            "Domain ": "={{ $json.status[0].domain }}"
+          },
+          "matchingColumns": [
+            "Domain "
+          ],
+          "schema": [
+            {
+              "id": "Domain ",
+              "displayName": "Domain ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1600,
+        48
+      ],
+      "id": "aa35fc93-6c4b-42b0-a795-50ea43d6e330",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08PBRQ0SNS",
+          "mode": "list",
+          "cachedResultName": "web-change"
+        },
+        "text": "Domain checking done",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        864,
+        -240
+      ],
+      "id": "08be70da-f1bc-4731-8310-caf7d6d4f61d",
+      "name": "Send a message",
+      "webhookId": "c09e82d1-6ed3-48d6-b0a4-d327885764c1",
+      "executeOnce": true,
+      "credentials": {
+        "slackApi": {
+          "id": "uc2x5EBnyRdtdFLg",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c8155bbb-8da1-4558-a46e-6ba42e33902a",
+              "leftValue": "={{ $json.status[0].summary }}",
+              "rightValue": "active",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1232,
+        32
+      ],
+      "id": "62c2efc9-5c3f-4cfb-a1ed-a6a20b1bcb4e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1104,
+        320
+      ],
+      "id": "5e3eb617-7791-40c8-958f-bdde9c8d28d7",
+      "name": "Wait",
+      "webhookId": "26d81b55-aa7d-4b40-9316-35ff738b68b5",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        848,
+        32
+      ],
+      "id": "6598e1fb-e094-4602-ba9c-e5bceb77faf1",
+      "name": "Wait1",
+      "webhookId": "ecc051f5-319a-46b9-aad4-c7e1a4e16a40"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "timeSavedPerExecution": 60,
+    "errorWorkflow": "PbHR0Z5zx7xRFk9v"
+  },
+  "versionId": "45774dbd-f4b9-4cac-a00c-0c612e0c2095",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "OzDTXteErqWCWYlm",
+  "tags": []
+}

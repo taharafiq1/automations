@@ -1,0 +1,762 @@
+{
+  "name": "Daily AI Newsletter",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -96
+      ],
+      "id": "a9bc7422-ac0c-4640-8d97-54cbc4f0a1e7",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Find me news for today",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI News Agent specialized in finding the top 5 most important AI and AI Agents news daily. Your mission is to discover fresh, relevant news and present it in a clear, accessible format.\n\n**MANDATORY WORKFLOW - FOLLOW THIS ORDER:**\n1. **FIRST**: Use the \"Headlines\" tool to get ALL existing headlines from the Google Sheet\n2. **SECOND**: Analyze the retrieved headlines to understand what news has already been covered\n3. **THIRD**: Use Perplexity to search for NEW AI news from the past 48 hours\n4. **FOURTH**: Compare Perplexity results with the Google Sheet headlines\n5. **FIFTH**: If duplicates found, use Perplexity again with different search terms\n6. **SIXTH**: Repeat until you have 5 completely unique news items\n\n**CRITICAL DEDUPLICATION RULES:**\n- You MUST call the \"Headlines\" tool BEFORE any Perplexity search\n- Compare every headline from Perplexity against the Google Sheet data\n- If ANY headline is similar, reject it and search for different news\n- Do NOT proceed until you have 5 headlines that are completely different from existing ones\n\n**NEWS FOCUS PRIORITIES:**\n- **Product launches** (new AI tools, platforms, models)\n- **Funding announcements** (investments, acquisitions, valuations)  \n- **Breaking news** (major developments, partnerships, controversies)\n- **AI Automations/AI Agents/Agentic AI** (workflows, autonomous systems, agent frameworks)\n\n**SEARCH STRATEGY:**\nIf you find duplicate headlines, try some other search approaches for example:\n- \"AI funding round 2025\"\n- \"new AI model release this week\"\n- \"AI startup acquisition news\"\n- \"AI agent platform launch\"\n- \"artificial intelligence breakthrough {{$now.format('MMMM')}} 2025\"\n\n**OUTPUT FORMAT:**\nOnly provide news that is NOT in the Google Sheet. Each item must have:\n- Headline (completely different from existing ones)\n- Description (2-3 sentences explaining what happened and impact)\n- URL (working link to the original source)\n\n**QUALITY CONTROL:**\n- Must be from reputable sources\n- Must show real business/technical impact\n- Must be genuinely newsworthy\n\nRemember: ALWAYS use the Headlines tool first, then compare EVERY result before finalizing your output."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        544,
+        -96
+      ],
+      "id": "6e95302b-dd5b-4a5e-9cf0-654365debc1a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1kxoz_updJcG_YGnjopOED5zQjyRWY98e_Fm6nS5Kqyc/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kxoz_updJcG_YGnjopOED5zQjyRWY98e_Fm6nS5Kqyc/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Headline"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        592,
+        128
+      ],
+      "id": "d4e93f5a-5732-403f-b121-001164d119ac",
+      "name": "Get Headlines",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "sonar",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {
+          "searchRecency": "week"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        704,
+        128
+      ],
+      "id": "067782e7-bf6f-4ccb-819c-f54f2509f777",
+      "name": "Get Daily News",
+      "credentials": {
+        "perplexityApi": {
+          "id": "rR8FQ9RkeTQ9Jccl",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        352,
+        128
+      ],
+      "id": "4cb4400a-085b-4b93-b373-4601ab079212",
+      "name": "LLM Brain",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UHvg8n6n1dmTkvyp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        832,
+        128
+      ],
+      "id": "03434e12-35b9-47c0-a1bd-16127d3d85e0",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"daily_ai_news\": [\n    {\n      \"headline\": \"Clear, informative headline describing the news\",\n      \"description\": \"2-3 sentences explaining what happened, who's involved, and why it's significant. Include key details like funding amounts, company names, or technical capabilities.\",\n      \"url\": \"https://original-news-source.com\"\n    },\n    {\n      \"headline\": \"Another unique headline\",\n      \"description\": \"Brief but comprehensive explanation of the development.\",\n      \"url\": \"https://another-news-source.com\"\n    }\n  ]\n  \n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        128
+      ],
+      "id": "bb67010c-77d8-46e4-8aa1-fc828d2297bb",
+      "name": "Output Parser"
+    },
+    {
+      "parameters": {
+        "sendTo": "you@gmail.com",
+        "subject": "Daily Dose of AI News",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Daily AI News</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f4f4;\">\n    <div style=\"background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);\">\n        \n        <div style=\"text-align: center; border-bottom: 3px solid #007acc; padding-bottom: 20px; margin-bottom: 30px;\">\n            <h1 style=\"color: #007acc; margin: 0; font-size: 28px;\">🤖 Daily AI News</h1>\n            <div style=\"color: #666; font-size: 14px; margin-top: 10px;\">Latest AI Updates from Last 24 hours</div>\n        </div>\n\n        <!-- News Item 1 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 1</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{ $json.output.daily_ai_news[0].headline }}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[0].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[0].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <!-- News Item 2 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 2</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{$json.output.daily_ai_news[1].headline}}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[1].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[1].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <!-- News Item 3 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 3</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{$json.output.daily_ai_news[2].headline}}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[2].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[2].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <!-- News Item 4 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 4</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{$json.output.daily_ai_news[3].headline}}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[3].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[3].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <!-- News Item 5 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 0px;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 5</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{$json.output.daily_ai_news[4].headline}}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[4].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[4].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <div style=\"text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #666; font-size: 12px;\">\n            <p>Bringing you daily dose of AI News, Automation & Funding Round Updates for AI</p>\n            <p>Generated by Taha's AI News Agent</p>\n        </div>\n    </div>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Taha's AI News"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1152,
+        -96
+      ],
+      "id": "88039c8f-752d-479e-aa90-79468236b540",
+      "name": "Send a message",
+      "webhookId": "e7bd6956-58d0-408d-af34-5f13fdba910e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ftj0Ri51edXdE4Yd",
+          "name": "Gmail-taharafiq.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Direct access based on your original JSON structure\nconst newsArray = $('AI Agent').first().json.output.daily_ai_news;\n\nreturn newsArray.map((newsItem, index) => ({\n  json: {\n    headline: newsItem.headline,\n    description: newsItem.description, \n    url: newsItem.url\n   \n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        -96
+      ],
+      "id": "b6577eb3-dce6-483b-b79d-4c2a8a6cf927",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kxoz_updJcG_YGnjopOED5zQjyRWY98e_Fm6nS5Kqyc",
+          "mode": "list",
+          "cachedResultName": "Daily AI Newsletter",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kxoz_updJcG_YGnjopOED5zQjyRWY98e_Fm6nS5Kqyc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kxoz_updJcG_YGnjopOED5zQjyRWY98e_Fm6nS5Kqyc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "URL": "={{ $json.url }}",
+            "Description": "={{ $json.description }}",
+            "Headline": "={{ $json.headline }}",
+            "Timestamp": "={{ $now.format('dd-MMM-yyyy') }}",
+            "ID": "==Row()-1"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Headline",
+              "displayName": "Headline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1584,
+        -96
+      ],
+      "id": "d73db284-e1e6-4a42-8f0b-5c2312d01291",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Find me news for today",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI News Agent specialized in finding the top 5 most important AI and AI Agents news daily. Your mission is to discover fresh, relevant news and present it in a clear, accessible format.\n\n**YOUR TASKS:**\n1. Use Perplexity to search for the latest AI news from the past 48 hours\n2. Select the 5 most important and interesting stories\n3. Present each story in simple, clear language while keeping technical terms intact\n4. For every story, provide a headline, brief description, and URL\n\n**NEWS FOCUS PRIORITIES:**\n- **Product launches** (new AI tools, platforms, models)\n- **Funding announcements** (investments, acquisitions, valuations)\n- **Breaking news** (major developments, partnerships, controversies)\n- **AI Automations/AI Agents/Agentic AI** (workflows, autonomous systems, agent frameworks)\n\n**WRITING STYLE:**\n- Use simple, clear language that's easy to understand\n- Keep technical terms as they are (GPT-4, LLM, API, neural networks, etc.)\n- Write concisely but informatively\n- Focus on what happened and why it matters\n\n**SEARCH STRATEGY:**\n\n- Prioritize news from reputable tech publications, company announcements, and industry sources\n- Focus on actionable developments that impact the AI industry\n\n**QUALITY CRITERIA:**\n- Each news item should be genuinely newsworthy (not just blog posts or opinions)\n- Prioritize news that shows real business impact, technological advancement, or market movement\n\n**OUTPUT FORMAT:**\nProvide exactly 5 news items, each with:\n- **Headline**: Clear, informative title\n- **Description**: 2-3 sentences explaining what happened, who's involved, and why it's significant\n- **URL**: Working link to the original news source\n\n\n**TOOLS AVAILABLE:**\n- Think: Use this for additional reasoning when needed\n- Perplexity: Use this to search for the latest AI news\n\nFocus on finding the most impactful and recent AI developments that would interest someone following the AI industry closely."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        752,
+        480
+      ],
+      "id": "3871e600-0733-418e-aecc-d30b7deb51f2",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "sonar",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {
+          "searchRecency": "week"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        912,
+        704
+      ],
+      "id": "a0c2d0ac-fc50-4e1e-baac-dea87b08d54e",
+      "name": "Get Daily News1",
+      "credentials": {
+        "perplexityApi": {
+          "id": "rR8FQ9RkeTQ9Jccl",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        704
+      ],
+      "id": "d732a712-f934-4df4-8952-2a8a329a8641",
+      "name": "Think1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"daily_ai_news\": [\n    {\n      \"headline\": \"Clear, informative headline describing the news\",\n      \"description\": \"2-3 sentences explaining what happened, who's involved, and why it's significant. Include key details like funding amounts, company names, or technical capabilities.\",\n      \"url\": \"https://original-news-source.com\"\n    },\n    {\n      \"headline\": \"Another unique headline\",\n      \"description\": \"Brief but comprehensive explanation of the development.\",\n      \"url\": \"https://another-news-source.com\"\n    }\n  ]\n  \n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1152,
+        704
+      ],
+      "id": "fe1a4402-44bc-4a68-b4eb-3cd73d9c6d89",
+      "name": "Output Parser1"
+    },
+    {
+      "parameters": {
+        "sendTo": "you@gmail.com",
+        "subject": "Daily Dose of AI News",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Daily AI News</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f4f4;\">\n    <div style=\"background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);\">\n        \n        <div style=\"text-align: center; border-bottom: 3px solid #007acc; padding-bottom: 20px; margin-bottom: 30px;\">\n            <h1 style=\"color: #007acc; margin: 0; font-size: 28px;\">🤖 Daily AI News</h1>\n            <div style=\"color: #666; font-size: 14px; margin-top: 10px;\">Latest AI Updates from Last 24 hours</div>\n        </div>\n\n        <!-- News Item 1 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 1</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{ $json.output.daily_ai_news[0].headline }}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[0].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[0].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <!-- News Item 2 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 2</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{$json.output.daily_ai_news[1].headline}}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[1].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[1].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <!-- News Item 3 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 3</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{$json.output.daily_ai_news[2].headline}}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[2].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[2].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <!-- News Item 4 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 4</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{$json.output.daily_ai_news[3].headline}}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[3].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[3].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <!-- News Item 5 -->\n        <div style=\"margin-bottom: 25px; padding-bottom: 0px;\">\n            <div style=\"background-color: #f8f9fa; color: #007acc; font-weight: bold; padding: 5px 10px; border-radius: 15px; font-size: 12px; margin-bottom: 10px; display: inline-block;\">News 5</div>\n            <div style=\"font-weight: bold; font-size: 18px; color: #2c3e50; margin-bottom: 12px; line-height: 1.4;\">{{$json.output.daily_ai_news[4].headline}}</div>\n            <div style=\"color: #555; margin-bottom: 15px; font-size: 16px; line-height: 1.6;\">{{$json.output.daily_ai_news[4].description}}</div>\n            <a href=\"{{$json.output.daily_ai_news[4].url}}\" style=\"display: inline-block; background-color: #007acc; color: white; text-decoration: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: bold;\" target=\"_blank\">Read Full Article</a>\n        </div>\n\n        <div style=\"text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #666; font-size: 12px;\">\n            <p>Bringing you daily dose of AI News, Automation & Funding Round Updates for AI</p>\n            <p>Generated by Taha's AI News Agent</p>\n        </div>\n    </div>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Taha's AI News"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1344,
+        480
+      ],
+      "id": "0fd0bcf6-0bbb-443b-929a-f740990de316",
+      "name": "Send a message1",
+      "webhookId": "e7bd6956-58d0-408d-af34-5f13fdba910e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "F8FhGJsXByMlZ18Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Direct access based on your original JSON structure\nconst newsArray = $('AI Agent1').first().json.output.daily_ai_news;\n\nreturn newsArray.map((newsItem, index) => ({\n  json: {\n    headline: newsItem.headline,\n    description: newsItem.description, \n    url: newsItem.url\n   \n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1552,
+        480
+      ],
+      "id": "36f5d342-a393-4782-9fad-9c1538332c85",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kxoz_updJcG_YGnjopOED5zQjyRWY98e_Fm6nS5Kqyc",
+          "mode": "list",
+          "cachedResultName": "Daily AI Newsletter",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kxoz_updJcG_YGnjopOED5zQjyRWY98e_Fm6nS5Kqyc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kxoz_updJcG_YGnjopOED5zQjyRWY98e_Fm6nS5Kqyc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "URL": "={{ $json.url }}",
+            "Description": "={{ $json.description }}",
+            "Headline": "={{ $json.headline }}",
+            "Timestamp": "={{ $now.format('dd-MMM-yyyy') }}",
+            "ID": "==Row()-1"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Headline",
+              "displayName": "Headline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1792,
+        480
+      ],
+      "id": "19050bba-ae90-41dc-a3a4-4cbfe6c38568",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 11
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        480
+      ],
+      "id": "dfaa4e16-1bff-463a-adab-37198aa48dd4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        608,
+        688
+      ],
+      "id": "c9e7617d-4a67-49a8-9e7b-0fa33c715e8f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2025-09-05T11:00:11.019+05:00",
+          "Readable date": "September 5th 2025, 11:00:11 am",
+          "Readable time": "11:00:11 am",
+          "Day of week": "Friday",
+          "Year": "2025",
+          "Month": "September",
+          "Day of month": "05",
+          "Hour": "11",
+          "Minute": "00",
+          "Second": "11",
+          "Timezone": "Asia/Karachi (UTC+05:00)"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Headlines": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Daily News": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Brain": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Daily News1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "PbHR0Z5zx7xRFk9v"
+  },
+  "versionId": "98493c6d-1c1c-4915-aacc-6afe7a6d71bc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "oeLsii0DgSg6JbKb",
+  "tags": []
+}

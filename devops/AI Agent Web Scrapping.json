@@ -1,0 +1,1852 @@
+{
+  "name": "AI Agent Web Scrapping",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        -304
+      ],
+      "id": "d978c081-6013-47f5-8dff-5383de2f0a0f",
+      "name": "When chat message received",
+      "webhookId": "b647c2f1-e3e9-4be0-965b-85826071d7a8"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Overview\nYou are the personal assistant that excels at web scraping. Your job is to send the user's query to the correct tool. You should never be writing emails, or creating even summaries, you just need to call the correct tool.\n\n## Tools\n- google_maps_web_scraper: Use this tool to web scrape google. You'll want to aggregate all the results together and send a list back to the user\n- yellow_pages_web_scraper: Use this tool to web scrape yellow pages. You'll want to aggregate all the results together and send a list back to the user\n- apollo_web_scraper: Use this tool to web apollo. You'll want to aggregate all the results together and send a list back to the user\n- instagram_web_scraper: Use this tool to web scrape instagram. You'll want to aggregate all the results together and send a list back to the user\n- tiktok_web_scraper: Use this tool to web scrape tiktok. You'll want to aggregate all the results together and send a list back to the user\n\nIf the user asks you to scrape multiple sources, please combine them all in one output.\n\n## Workflow inputs\n- search: please insert the city. For example: Toronto, or Los Angeles\n- location: please insert the city. For example: Toronto, or Los Angeles\n- state: please insert the state/province code uppercase. For example: NY, CA\n- country: please insert the country code, lower case. For example: ca, or us"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        736,
+        -304
+      ],
+      "id": "5c96ed5c-6f3f-496b-b324-61694a0cc175",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        -80
+      ],
+      "id": "0300c5da-2651-40db-bacf-d5d94883f2dc",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        -80
+      ],
+      "id": "f743d58d-7649-49db-973d-c13a451ffdbb",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "name": "google_maps_web_scraper",
+        "description": "Call this tool to web scrape Google",
+        "workflowId": {
+          "__rl": true,
+          "value": "12AKoHjuuvaPIHb6",
+          "mode": "list",
+          "cachedResultName": "Google Maps Scraping"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "country": "={{ $fromAI(\"countryCodeLowerCase\", \"this is the country code that you'll use to search Google Maps with, such asus, ca, etc - it must be lower case\") }}",
+            "state": "={{ $fromAI(\"stateInitials\", \"this is the intials of the state that you'll use to search Google Maps with, such as NY, CA, etc - uppercase\") }}",
+            "location": "={{ $fromAI(\"city\", \"this is the city that you'll use to search Google Maps with, such as New York, Los Angeles, etc\") }}",
+            "search": "={{ $fromAI(\"industry\", \"this is the industry that you'll use to search Google Maps with, such as landscaping, roofing, photography, etc\") }}"
+          },
+          "matchingColumns": [
+            "Test"
+          ],
+          "schema": [
+            {
+              "id": "search",
+              "displayName": "search",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -80
+      ],
+      "id": "bff8e806-f4e1-45b9-aa6f-42e42ab107d0",
+      "name": "Google Maps Web Scraper"
+    },
+    {
+      "parameters": {
+        "name": "yellow_pages_web_scraper",
+        "description": "Call this tool to web scrape Yellow Pages",
+        "workflowId": {
+          "__rl": true,
+          "value": "isA1okdngFHSlgk8",
+          "mode": "list",
+          "cachedResultName": "Yellow Pages Scraping"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "search": "={{ $fromAI(\"industry\", \"this is the industry that you'll use to search Yellow Pages with, such as landscaping, roofing, photography, etc\") }}",
+            "location": "={{ $fromAI(\"location\", \"this is the city that you'll use to search Yellow Pages with, such as New York, Los Angeles, etc\") }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "search",
+              "displayName": "search",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        944,
+        -80
+      ],
+      "id": "a96902dd-b23d-4e6e-aaef-9a624beeb4f7",
+      "name": "Yellow Pages"
+    },
+    {
+      "parameters": {
+        "name": "apollo_web_scraper",
+        "description": "Call this tool to web scrape Apollo",
+        "workflowId": {
+          "__rl": true,
+          "value": "vg7ioHzFge25fuAy",
+          "mode": "list",
+          "cachedResultName": "Apollo Scraping"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "search": "={{ $fromAI(\"industry\", \"this is the industry that you'll use to search Apollo with, such as landscaping, roofing, photography, etc\") }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "search",
+              "displayName": "search",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        -80
+      ],
+      "id": "60b15adf-0bff-4c62-8b1f-e8af3baa17ec",
+      "name": "Apollo"
+    },
+    {
+      "parameters": {
+        "name": "instagram_web_scraper",
+        "description": "Call this tool to web scrape Instagram",
+        "workflowId": {
+          "__rl": true,
+          "value": "P3jGQDAnGLyToTCP",
+          "mode": "list",
+          "cachedResultName": "Instagram Scraping"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "hashtag": "={{ $fromAI(\"industry\", \"this is the industry that you'll use to search Instagram with, such as landscaping, roofing, photography, etc\") }}"
+          },
+          "matchingColumns": [
+            "hashtag"
+          ],
+          "schema": [
+            {
+              "id": "hashtag",
+              "displayName": "hashtag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        -80
+      ],
+      "id": "b6cac5ff-064c-4250-bed2-62823b8ef28b",
+      "name": "Instagram"
+    },
+    {
+      "parameters": {
+        "name": "tiktok_web_scraper",
+        "description": "Call this tool to web scrape TikTok",
+        "workflowId": {
+          "__rl": true,
+          "value": "XAoVK11JodOJWYqV",
+          "mode": "list",
+          "cachedResultName": "TikTok Scraping"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "hashtag": "={{ $fromAI(\"industry\", \"this is the industry that you'll use to search TikTok with, such as landscaping, roofing, photography, etc\") }}"
+          },
+          "matchingColumns": [
+            "hashtag"
+          ],
+          "schema": [
+            {
+              "id": "hashtag",
+              "displayName": "hashtag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1392,
+        -80
+      ],
+      "id": "e00bfda9-99a6-4a2a-90b0-1bec0192b724",
+      "name": "TikTok"
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"hashtag\": \"landscaping\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        496
+      ],
+      "id": "a62eb327-8eea-4a31-92d0-8b78f1176215",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/reGe1ST3OBgYZSsZJ/runs?waitForFinish=300",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"hashtags\": [\n        \"{{ $('When Executed by Another Workflow').item.json.hashtag }}\"\n    ],\n    \"resultsLimit\": 2,\n    \"resultsType\": \"posts\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        864,
+        496
+      ],
+      "id": "e5a34502-a827-47c6-8ce2-ff84b7e44ad2",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items?format=json",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            },
+            {
+              "name": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1088,
+        496
+      ],
+      "id": "f43e5161-cd1f-4847-b912-13725abdfc90",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        496
+      ],
+      "id": "fb162b56-fe70-48bb-814f-7c80b53c8118",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w",
+          "mode": "list",
+          "cachedResultName": "Demo-AI Agent Web Scraping Results",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1853048620,
+          "mode": "list",
+          "cachedResultName": "Social Media",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/158g438RE2MUl_pKS2A_HTnarZ7XixFh_fUBHZmp8uQ4/edit#gid=1853048620"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.id }}",
+            "Hashtag": "={{ $('When Executed by Another Workflow').item.json.hashtag }}",
+            "Caption": "={{ $json.caption }}",
+            "Profile": "=https://www.instagram.com/{{ $json.ownerUsername }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hashtag",
+              "displayName": "Hashtag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Profile",
+              "displayName": "Profile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1296,
+        496
+      ],
+      "id": "6b556333-bb2a-42e8-9e28-f71f02323a6b",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e389d681-3bc9-45a5-93a3-693e9e1f2baf",
+              "name": "location",
+              "value": "={{ encodeURIComponent(\"New York, US\") }}",
+              "type": "string"
+            },
+            {
+              "id": "82bd17ab-9f52-47cc-b262-26eeb052cb09",
+              "name": "industry_tag",
+              "value": "landscaping",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        496
+      ],
+      "id": "1e4679f6-e985-4771-ab4f-ea0c5406eade",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "## Instagram Scrapper\n**Copy this section in new Workflow and update \"When Executed by Another Workflow\"**",
+        "height": 288,
+        "width": 1616
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        384
+      ],
+      "id": "2c2773d9-62d0-4b65-98fd-844cbcb778e7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/f1ZeP0K58iwlqG2pY/runs?waitForFinish=300",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"hashtags\": [\n        \"{{ $('When Executed by Another Workflow').item.json.hashtag }}\"\n    ],\n    \"resultsPerPage\": 5,\n    \"shouldDownloadCovers\": false,\n    \"shouldDownloadSlideshowImages\": false,\n    \"shouldDownloadSubtitles\": false,\n    \"shouldDownloadVideos\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        864,
+        864
+      ],
+      "id": "f4a0db35-e449-4f1b-aa75-6173d4d91026",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items?format=json",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            },
+            {
+              "name": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1088,
+        864
+      ],
+      "id": "33714337-a6ef-49d0-837a-e85ecf92d5e0",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        864
+      ],
+      "id": "9adb819d-41d7-40e0-acd5-57c76a311d96",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w",
+          "mode": "list",
+          "cachedResultName": "Demo-AI Agent Web Scraping Results",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1853048620,
+          "mode": "list",
+          "cachedResultName": "Social Media",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/158g438RE2MUl_pKS2A_HTnarZ7XixFh_fUBHZmp8uQ4/edit#gid=1853048620"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.id }}",
+            "Hashtag": "={{ $('When Executed by Another Workflow').item.json.hashtag }}",
+            "Caption": "={{ $json.text }}",
+            "Profile": "={{ $json.authorMeta.profileUrl }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hashtag",
+              "displayName": "Hashtag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Profile",
+              "displayName": "Profile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1296,
+        864
+      ],
+      "id": "d7ba0c31-3d9a-444b-b488-e507b9aa5d2c",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e389d681-3bc9-45a5-93a3-693e9e1f2baf",
+              "name": "location",
+              "value": "={{ encodeURIComponent(\"New York, US\") }}",
+              "type": "string"
+            },
+            {
+              "id": "82bd17ab-9f52-47cc-b262-26eeb052cb09",
+              "name": "industry_tag",
+              "value": "landscaping",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        864
+      ],
+      "id": "c22a2cee-edfa-45d1-9939-f856ba8eb4f6",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "content": "## TikTok Scrapper\n**Copy this section in new Workflow and update \"When Executed by Another Workflow\"**",
+        "height": 288,
+        "width": 1616
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        752
+      ],
+      "id": "051cddc1-b86e-4756-8e7a-5a97e2c09ba0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        416,
+        864
+      ],
+      "id": "f3f665f3-de1c-418d-a4b9-04a339578ecb",
+      "name": "When Executed by Another Workflow1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/wWqrTazDTGHCGTFvw/runs?waitForFinish=300",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"debugMode\": false,\n  \"location\": \"{{ $json.location }}\",\n  \"maxItems\": 20,\n  \"search\": \"{{ $json.search }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        1232
+      ],
+      "id": "ba741bc6-6baf-499e-a8ae-9da78c8ba693",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items?format=json",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            },
+            {
+              "name": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1104,
+        1232
+      ],
+      "id": "a743d05c-219c-47a5-852e-99b5f5f5a534",
+      "name": "HTTP Request5"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        1232
+      ],
+      "id": "577becff-5df6-4ae9-a517-289a943c16ce",
+      "name": "Aggregate2"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w",
+          "mode": "list",
+          "cachedResultName": "Demo-AI Agent Web Scraping Results",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/158g438RE2MUl_pKS2A_HTnarZ7XixFh_fUBHZmp8uQ4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.url }}",
+            "City": "=",
+            "URL": "={{ $json.website }}",
+            "Name": "={{ $json.name }}",
+            "Phone": "={{ $json.phone }}",
+            "Service": "={{ $json.categories[0] }}",
+            "Platform": "Yellow Pages"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1328,
+        1232
+      ],
+      "id": "6fe5ec3a-df0f-4bbc-86a6-e342fceb759f",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## YellowPages Scrapper\n**Copy this section in new Workflow and update \"When Executed by Another Workflow\"**",
+        "height": 288,
+        "width": 1616
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        128,
+        1136
+      ],
+      "id": "0f2410be-ce0b-4dc9-af47-6d409eaca12e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        576,
+        1232
+      ],
+      "id": "c5e6aa52-ab13-47cc-a9e0-9b48a8ec2daf",
+      "name": "When Executed by Another Workflow2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/gKvEpKx3i3zlRj2G9/runs?waitForFinish=300",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"getPersonalEmails\": true,\n    \"getWorkEmails\": true,\n    \"totalRecords\": 2,\n    \"url\": \"https://app.apollo.io/#/people?page=1&contactEmailExcludeCatchAll=true&sortAscending=false&sortByField=%5Bnone%5D&personLocations[]={{ $json.location }}&qOrganizationKeywordTags[]={{ $json.industry_tag }}&includedOrganizationKeywordFields[]=tags&includedOrganizationKeywordFields[]=name\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        912,
+        1616
+      ],
+      "id": "eccf39db-498d-4378-a512-683f38bc917e",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items?format=json",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            },
+            {
+              "name": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1136,
+        1616
+      ],
+      "id": "b057bc03-e660-40fe-8bb0-3256d02264b3",
+      "name": "HTTP Request7"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        1616
+      ],
+      "id": "667a8d8e-c8d4-4e33-a75e-dc81e1194e29",
+      "name": "Aggregate3"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w",
+          "mode": "list",
+          "cachedResultName": "Demo-AI Agent Web Scraping Results",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/158g438RE2MUl_pKS2A_HTnarZ7XixFh_fUBHZmp8uQ4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.id }}",
+            "City": "={{ $json.city }}",
+            "URL": "={{ $json.organization.website_url }}",
+            "Name": "={{ $json.employment_history[0].organization_name }}",
+            "Phone": "=Phone: {{ $json.organization.primary_phone.number }}",
+            "Service": "=",
+            "Platform": "Apollo",
+            "LinkedIn": "={{ $json.linkedin_url }}",
+            "Last Name": "={{ $json.last_name }}",
+            "First Name": "={{ $json.first_name }}",
+            "Email": "={{ $json.email }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn",
+              "displayName": "LinkedIn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1344,
+        1616
+      ],
+      "id": "dd726b23-fcf4-4924-a5de-e53bcc6fef26",
+      "name": "Google Sheets3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e389d681-3bc9-45a5-93a3-693e9e1f2baf",
+              "name": "location",
+              "value": "={{ encodeURIComponent($json.location) }}",
+              "type": "string"
+            },
+            {
+              "id": "82bd17ab-9f52-47cc-b262-26eeb052cb09",
+              "name": "industry_tag",
+              "value": "={{ $json.search }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        688,
+        1616
+      ],
+      "id": "2dbd76bc-a7a4-4164-98aa-40b1c68ff512",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        448,
+        1616
+      ],
+      "id": "2058b243-617d-4fe7-8547-67d674633598",
+      "name": "When Executed by Another Workflow3"
+    },
+    {
+      "parameters": {
+        "content": "## Apollo Scrapper\n**Copy this section in new Workflow and update \"When Executed by Another Workflow\"**",
+        "height": 288,
+        "width": 1616
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        128,
+        1520
+      ],
+      "id": "af1df1bd-932e-42d8-b24c-dddd15351c84",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/2Mdma1N6Fd0y3QEjR/runs?waitForFinish=300",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"city\": \"{{ $json.location }}\",\n    \"countryCode\": \"{{ $json.country }}\",\n    \"language\": \"en\",\n    \"locationQuery\": \"{{ $json.location }}\",\n    \"maxCrawledPlacesPerSearch\": 2,\n    \"searchStringsArray\": [\n        \"{{ $json.search }}\"\n    ],\n    \"skipClosedPlaces\": false,\n    \"state\": \"{{ $json.state }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        928,
+        2016
+      ],
+      "id": "9e35bf30-0064-4da0-8747-fbc9cf82cbe9",
+      "name": "HTTP Request8"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items?format=json",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_API_KEY>"
+            },
+            {
+              "name": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1152,
+        2016
+      ],
+      "id": "49a23b15-a94c-4fab-a693-d154054cbe98",
+      "name": "HTTP Request9"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        2016
+      ],
+      "id": "8585f1aa-6261-4bf4-8e3e-96378bd8357e",
+      "name": "Aggregate4"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w",
+          "mode": "list",
+          "cachedResultName": "Demo-AI Agent Web Scraping Results",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o7ckrbIz1FJZkKE3eFn7NECuNU2iCtFPhM2-_DEOq8w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/158g438RE2MUl_pKS2A_HTnarZ7XixFh_fUBHZmp8uQ4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.url }}",
+            "City": "=",
+            "URL": "={{ $json.website }}",
+            "Name": "={{ $json.title }}",
+            "Phone": "={{ $json.phone }}",
+            "Service": "={{ $json.searchString }}",
+            "Platform": "Google Maps"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1376,
+        2016
+      ],
+      "id": "651d6cf6-f42f-41f8-b532-ce5faa8805aa",
+      "name": "Google Sheets4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Google Maps Scrapper\n**Copy this section in new Workflow and update \"When Executed by Another Workflow\"**",
+        "height": 288,
+        "width": 1616
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        144,
+        1936
+      ],
+      "id": "e598cc26-8324-47f2-8c6b-9863163e9218",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "hashtag": "landscaping"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Maps Web Scraper": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Yellow Pages": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apollo": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TikTok": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request7": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets3": {
+      "main": [
+        [
+          {
+            "node": "Aggregate3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request8": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request9": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets4": {
+      "main": [
+        [
+          {
+            "node": "Aggregate4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4d0a9f2f-d9d0-4cd4-9501-a9cb4697ad5d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "4tJtAeVk0ToVeuaP",
+  "tags": []
+}

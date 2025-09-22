@@ -1,0 +1,1957 @@
+{
+  "name": "AI marketing report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "id": "8539419a-e377-4a18-a6c2-e088f1e22e50",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        512,
+        64
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "138cba97-1aec-474c-a70c-588e0889a993",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        704,
+        400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "name": "Google_Ads",
+        "description": "Call this tool to get the output of the Google Ads Workflow",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "nRGs7Ogv7eU1mJQl",
+          "cachedResultName": "Google Ads Report: Weekly Subflow ROAS"
+        }
+      },
+      "id": "b29c561a-60c9-4fd6-9c21-05e6d37e2607",
+      "name": "Google_Ads",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1680,
+        400
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "name": "Meta_Ads",
+        "description": "Call this tool to get the output of the Meta Ads Workflow",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "9sC80Rt1eqgrfphk",
+          "cachedResultName": "Meta Ads Report: Weekly Subflow ROAS"
+        }
+      },
+      "id": "dead150a-714d-4714-9a6b-cddbd6d17e93",
+      "name": "Meta_Ads",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1824,
+        448
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "name": "EP_Data",
+        "description": "Call this tool to get the output of the SER Data Workflow",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "ploQFf5BtgCC6ryu",
+          "cachedResultName": "GA Report: EP Subflow Weekly"
+        }
+      },
+      "id": "41f3d61c-81e5-4966-888b-dbf35fd2cd9a",
+      "name": "Analytics_Domain_1",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        912,
+        400
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "name": "SBW_Data",
+        "description": "Call this tool to get the output of the SBW Data Workflow",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "ECmFUVocSLqB3afJ",
+          "cachedResultName": "GA Report: SBW Subflow Weekly"
+        }
+      },
+      "id": "560e5fa9-6743-4540-8397-eab36eaa8493",
+      "name": "Analytics_Domain_3",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1232,
+        400
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "name": "SER_Data",
+        "description": "Call this tool to get the output of the SER Data Workflow",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "EWAE7Qx70cHZuXte",
+          "cachedResultName": "GA Report: SER Subflow Weekly"
+        }
+      },
+      "id": "ebc6ad7e-88b9-47f9-ae6b-422d29c0d732",
+      "name": "Analytics_Domain_2",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1072,
+        400
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "name": "SZO_Data",
+        "description": "Call this tool to get the output of the SZO Data Workflow",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "eyPh3eaqrBLAcLKF",
+          "cachedResultName": "GA Report: SZO Subflow Weekly"
+        }
+      },
+      "id": "c3e6cbd9-8cb1-44d1-acff-fe88b2966b3f",
+      "name": "Analytics_Domain_4",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1392,
+        400
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "name": "UCH_Data",
+        "description": "Call this tool to get the output of the UCH Data Workflow",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "ErIeoUuyF4fqMbhL",
+          "cachedResultName": "GA Report: UCH Subflow Weekly"
+        }
+      },
+      "id": "586f132a-9ffe-4220-94a9-acbde0aef6f6",
+      "name": "Analytics_Domain_5",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1552,
+        400
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {},
+      "id": "94997a6a-fb7d-4462-8247-44f4f81e0490",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        512,
+        752
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "381302a3-31a5-426c-83a5-e4ffafb6dd1c",
+      "name": "Calculator",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "position": [
+        2464,
+        960
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Sub-Workflow: Google Analytics Data",
+        "height": 460,
+        "width": 2340,
+        "color": 6
+      },
+      "id": "c1c508a2-2642-45d8-9520-349c4fd13874",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Sub-Workflow: Meta Ads Data",
+        "height": 460,
+        "width": 2340,
+        "color": 5
+      },
+      "id": "4c24924d-4953-48d0-8f99-9364e970d0dc",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        1728
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Main Workflow: Weekly Report Assistant",
+        "height": 540,
+        "width": 2340
+      },
+      "id": "3eacba63-fa1d-46c3-8ce7-5054b4bd1942",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "f3cdd7bd-ad82-4cbe-b589-f843c77e7f43",
+      "name": "Calculator1",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "position": [
+        2528,
+        1488
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Sub-Workflow: Google Ads Data",
+        "height": 500,
+        "width": 2340,
+        "color": 4
+      },
+      "id": "e4495f00-a3c5-4806-88f4-c091a31b7050",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        1168
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "3df8a402-b3d0-4428-80c4-65a18d3242c6",
+      "name": "Calculator3",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "position": [
+        2544,
+        2048
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "propertyId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "345060083",
+          "cachedResultUrl": "https://analytics.google.com/analytics/web/#/p345060083/",
+          "cachedResultName": "https://www.ep-reisen.de  – GA4"
+        },
+        "metricsGA4": {
+          "metricValues": [
+            {
+              "listName": "screenPageViews"
+            },
+            {},
+            {
+              "listName": "sessions"
+            },
+            {
+              "listName": "sessionsPerUser"
+            },
+            {
+              "listName": "other",
+              "name": "averageSessionDuration"
+            },
+            {
+              "listName": "other",
+              "name": "ecommercePurchases"
+            },
+            {
+              "listName": "other",
+              "name": "averagePurchaseRevenue"
+            },
+            {
+              "listName": "other",
+              "name": "purchaseRevenue"
+            }
+          ]
+        },
+        "dimensionsGA4": {
+          "dimensionValues": [
+            {}
+          ]
+        },
+        "additionalFields": {}
+      },
+      "id": "26e9be12-5d83-49f3-999a-23e5cdb61afd",
+      "name": "Call Google Analytics data: Last 7 days",
+      "type": "n8n-nodes-base.googleAnalytics",
+      "position": [
+        768,
+        752
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "propertyId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "345060083",
+          "cachedResultUrl": "https://analytics.google.com/analytics/web/#/p345060083/",
+          "cachedResultName": "https://www.ep-reisen.de  – GA4"
+        },
+        "dateRange": "custom",
+        "startDate": "={{ $json.startDate }}",
+        "endDate": "={{ $json.endDate }}",
+        "metricsGA4": {
+          "metricValues": [
+            {
+              "listName": "screenPageViews"
+            },
+            {},
+            {
+              "listName": "sessions"
+            },
+            {
+              "listName": "sessionsPerUser"
+            },
+            {
+              "listName": "other",
+              "name": "averageSessionDuration"
+            },
+            {
+              "listName": "other",
+              "name": "ecommercePurchases"
+            },
+            {
+              "listName": "other",
+              "name": "averagePurchaseRevenue"
+            },
+            {
+              "listName": "other",
+              "name": "purchaseRevenue"
+            }
+          ]
+        },
+        "dimensionsGA4": {
+          "dimensionValues": [
+            {}
+          ]
+        },
+        "additionalFields": {}
+      },
+      "id": "72bddef2-7b3a-47ca-979c-822fa9581f48",
+      "name": "Call Google Analytics data: Last 7 days (previous year)",
+      "type": "n8n-nodes-base.googleAnalytics",
+      "position": [
+        1680,
+        752
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aktuelles Datum\nconst today = new Date();\n\n// Berechnung des Enddatums (letzter Tag vor dem aktuellen Datum im Vorjahr)\nconst end = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate() - 1);\n\n// Berechnung des Startdatums (7 Tage vor dem Enddatum)\nconst start = new Date(end);\nstart.setDate(end.getDate() - 6);\n\n// Formatierung zu YYYYMMDD\nfunction formatDate(date) {\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0');\n    const day = String(date.getDate()).padStart(2, '0');\n    return `${year}${month}${day}`;\n}\n\n// Ausgabe\nconst startDate = formatDate(start);\nconst endDate = formatDate(end);\n\nreturn {\n    startDate,\n    endDate\n};"
+      },
+      "id": "e806c2c8-927f-4e17-aca2-48ce6bb8ac12",
+      "name": "Calculation same period previous year",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1472,
+        1264
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputData = items[0].json.results;\nconst totals = {\n   impressions: 0,\n   clicks: 0,\n   conversions: 0,\n   costMicros: 0,\n   conversionsValue: 0\n};\n\ninputData.forEach(campaign => {\n   totals.impressions += parseInt(campaign.metrics.impressions) || 0;\n   totals.clicks += parseInt(campaign.metrics.clicks) || 0;\n   totals.conversions += parseFloat(campaign.metrics.conversions) || 0;\n   totals.costMicros += parseInt(campaign.metrics.costMicros) || 0;\n   totals.conversionsValue += parseFloat(campaign.metrics.conversionsValue) || 0;\n});\n\nconst results = {\n   impressions: totals.impressions,\n   clicks: totals.clicks,\n   conversions: totals.conversions,\n   cost_micros: totals.costMicros,\n   ctr: totals.clicks / totals.impressions,\n   cost_per_conversion: totals.costMicros / totals.conversions,\n   cpm: (totals.costMicros / (totals.impressions / 1000)),\n   roas: totals.conversionsValue / (totals.costMicros / 1000000)\n};\nreturn results;"
+      },
+      "id": "60f593e6-333b-432e-986c-83b86b7c12f1",
+      "name": "Format data input (previous year)",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1840,
+        1264
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputData = items[0].json.results;\nconst totals = {\n    impressions: 0,\n    clicks: 0,\n    conversions: 0,\n    costMicros: 0,\n    conversionsValue: 0\n};\n\ninputData.forEach(campaign => {\n    totals.impressions += parseInt(campaign.metrics.impressions) || 0;\n    totals.clicks += parseInt(campaign.metrics.clicks) || 0; \n    totals.conversions += parseFloat(campaign.metrics.conversions) || 0;\n    totals.costMicros += parseInt(campaign.metrics.costMicros) || 0;\n    totals.conversionsValue += parseFloat(campaign.metrics.conversionsValue) || 0;\n});\n\nconst results = {\n    impressions: totals.impressions,\n    clicks: totals.clicks,\n    conversions: totals.conversions, \n    cost_micros: totals.costMicros,\n    ctr: totals.clicks / totals.impressions,\n    cost_per_conversion: totals.costMicros / totals.conversions,\n    cpm: (totals.costMicros / (totals.impressions / 1000)),\n    roas: totals.conversionsValue / (totals.costMicros / 1000000)\n};\n\nreturn results;"
+      },
+      "id": "d007e6f3-4c98-4694-ae6d-618e9e9b41ff",
+      "name": "Format data input (current year)",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        880,
+        1264
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9c2f8b9a-e964-49a0-8837-efb0dfd7bcae",
+              "name": "Impressions",
+              "type": "number",
+              "value": "={{ $json.impressions }}"
+            },
+            {
+              "id": "8b524518-1268-4971-b5c9-ae7da09d94f9",
+              "name": "CPM",
+              "type": "number",
+              "value": "={{ $json.cpm }}"
+            },
+            {
+              "id": "ca7279b9-c643-425f-aa99-cb17146e9994",
+              "name": "Clicks",
+              "type": "number",
+              "value": "={{ $json.clicks }}"
+            },
+            {
+              "id": "591288f7-e8cf-445e-872a-5b83f997b825",
+              "name": "CTR",
+              "type": "number",
+              "value": "={{ $json.ctr }}"
+            },
+            {
+              "id": "dc1a43da-3f3a-4dca-bbde-904222d7f693",
+              "name": "Conversions",
+              "type": "number",
+              "value": "={{ $json.conversions }}"
+            },
+            {
+              "id": "eac0b53e-c452-40b8-92bc-8af8ea349984",
+              "name": "=Cost per Conversion",
+              "type": "number",
+              "value": "={{ $json.cost_per_conversion }}"
+            },
+            {
+              "id": "4b5d569a-26c9-4a2f-be48-6814860d33c1",
+              "name": "ROAS",
+              "type": "number",
+              "value": "={{ $json.roas }}"
+            },
+            {
+              "id": "b96439be-189d-4ebe-b49e-d5c31fefe9f0",
+              "name": "Spend",
+              "type": "number",
+              "value": "={{ $json.cost_micros }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2abb6c91-63df-4f95-81e2-47caef237ed3",
+      "name": "Assign data from input (current year)",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1072,
+        1264
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "Impressions"
+            },
+            {
+              "aggregation": "average",
+              "field": "CPM"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Clicks"
+            },
+            {
+              "aggregation": "average",
+              "field": "CTR"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Conversions"
+            },
+            {
+              "aggregation": "average",
+              "field": "Cost per Conversion"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Spend"
+            },
+            {
+              "aggregation": "average",
+              "field": "ROAS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "043d8ddb-a7b8-4427-a258-d258c8588888",
+      "name": "Summarize input (current year)",
+      "type": "n8n-nodes-base.summarize",
+      "position": [
+        1264,
+        1264
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9c2f8b9a-e964-49a0-8837-efb0dfd7bcae",
+              "name": "Impressions",
+              "type": "number",
+              "value": "={{ $json.impressions }}"
+            },
+            {
+              "id": "8b524518-1268-4971-b5c9-ae7da09d94f9",
+              "name": "CPM",
+              "type": "number",
+              "value": "={{ $json.cpm }}"
+            },
+            {
+              "id": "ca7279b9-c643-425f-aa99-cb17146e9994",
+              "name": "Clicks",
+              "type": "number",
+              "value": "={{ $json.clicks }}"
+            },
+            {
+              "id": "591288f7-e8cf-445e-872a-5b83f997b825",
+              "name": "CTR",
+              "type": "number",
+              "value": "={{ $json.ctr }}"
+            },
+            {
+              "id": "dc1a43da-3f3a-4dca-bbde-904222d7f693",
+              "name": "Conversions",
+              "type": "number",
+              "value": "={{ $json.conversions }}"
+            },
+            {
+              "id": "eac0b53e-c452-40b8-92bc-8af8ea349984",
+              "name": "=Cost per conversion",
+              "type": "number",
+              "value": "={{ $json.cost_per_conversion }}"
+            },
+            {
+              "id": "76bda144-0cb4-4614-a658-ddb31726ecb9",
+              "name": "ROAS",
+              "type": "number",
+              "value": "={{ $json.roas }}"
+            },
+            {
+              "id": "b96439be-189d-4ebe-b49e-d5c31fefe9f0",
+              "name": "Spend",
+              "type": "number",
+              "value": "={{ $json.cost_micros }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "621bfdcb-b2bb-4f2e-a35d-58df56c254c9",
+      "name": "Assign input (previous year)",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2000,
+        1264
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "Impressions"
+            },
+            {
+              "aggregation": "average",
+              "field": "CPM"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Clicks"
+            },
+            {
+              "aggregation": "average",
+              "field": "CTR"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Conversions"
+            },
+            {
+              "aggregation": "average",
+              "field": "Cost per conversion"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Spend"
+            },
+            {
+              "aggregation": "average",
+              "field": "ROAS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d438b640-c411-4e22-b69e-dd2b0a95230b",
+      "name": "Summarize input (previous year)",
+      "type": "n8n-nodes-base.summarize",
+      "position": [
+        2192,
+        1264
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aktuelles Datum\nconst today = new Date();\n\n// Berechnung des Enddatums (letzter Tag vor dem aktuellen Datum)\nconst end = new Date(today);\nend.setDate(today.getDate() - 1);\n\n// Berechnung des Startdatums (7 Tage vor dem Enddatum)\nconst start = new Date(end);\nstart.setDate(end.getDate() - 6);\n\n// Formatierung zu YYYYMMDD\nfunction formatDate(date) {\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0');\n    const day = String(date.getDate()).padStart(2, '0');\n    return `${year}${month}${day}`;\n}\n\n// Ausgabe\nconst startDate = formatDate(start);\nconst endDate = formatDate(end);\n\nreturn { startDate, endDate };"
+      },
+      "id": "aecb1dde-e1a2-46ac-a8b6-6de9359f114a",
+      "name": "Calculate date format for Google Ads request (last 7 days)",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        480,
+        1264
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://googleads.googleapis.com/v17/customers/3300525230/googleAds:search",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleAdsOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "developer-token",
+              "value": "fzQ2U5IcU4ZH0vBDn4Slww"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "=SELECT\n   campaign.name,\n   metrics.impressions,\n   metrics.average_cpm,\n   metrics.clicks, \n   metrics.ctr,\n   metrics.conversions,\n   metrics.cost_per_conversion,\n   metrics.cost_micros,\n   metrics.conversions_value\nFROM campaign\nWHERE segments.date >= '{{ $json.startDate }}' AND segments.date <= '{{ $json.endDate }}'"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "316ee8f7-6bda-4972-9bea-bdb9475ebce6",
+      "name": "Call Google Ads Data: Last 7 days",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        704,
+        1264
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://googleads.googleapis.com/v17/customers/3300525230/googleAds:search",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleAdsOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "developer-token",
+              "value": "fzQ2U5IcU4ZH0vBDn4Slww"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "=SELECT\n   campaign.name,\n   metrics.impressions,\n   metrics.average_cpm, \n   metrics.clicks,\n   metrics.ctr,\n   metrics.conversions,\n   metrics.cost_per_conversion,\n   metrics.cost_micros,\n   metrics.conversions_value\nFROM campaign\nWHERE segments.date >= '{{ $json.startDate }}' AND segments.date <= '{{ $json.endDate }}'"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1fb19807-3e50-402f-a594-de2842adb9da",
+      "name": "Call Google Ads Data: Last 7 days (previous year)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1664,
+        1264
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "graphApiVersion": "v20.0",
+        "node": "act_54337533",
+        "edge": "insights",
+        "options": {
+          "queryParametersJson": "={\n \"fields\": \"impressions,cpm,inline_link_clicks,inline_link_click_ctr,conversions,cost_per_conversion,spend,action_values,purchase_roas\",\n \"time_range\": {\n   \"since\": \"{{ $json.currentPeriod.since }}\",\n   \"until\": \"{{ $json.currentPeriod.until }}\"\n }\n}"
+        }
+      },
+      "id": "a0dfda98-3f9f-426e-91f4-97c060d42fd2",
+      "name": "Call Meta Ads Data: Last 7 days",
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "position": [
+        704,
+        1824
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "graphApiVersion": "v20.0",
+        "node": "act_54337533",
+        "edge": "insights",
+        "options": {
+          "queryParametersJson": "={\n \"fields\": \"impressions,cpm,inline_link_clicks,inline_link_click_ctr,conversions,cost_per_conversion,spend,action_values,purchase_roas\",\n \"time_range\": {\n   \"since\": \"{{$node['Calculate date format for meta ads request s'].json.lastYear.since}}\",\n   \"until\": \"{{$node['Calculate date format for meta ads request s'].json.lastYear.until}}\"\n }\n}"
+        }
+      },
+      "id": "85d4dceb-a439-40b1-97ba-5fec1d83013e",
+      "name": "Call Meta Ads Data: Last 7 days (previous year)",
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "position": [
+        1440,
+        1824
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "Impressions"
+            },
+            {
+              "aggregation": "average",
+              "field": "CPM"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Clicks"
+            },
+            {
+              "aggregation": "average",
+              "field": "CTR"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Conversions"
+            },
+            {
+              "aggregation": "average",
+              "field": "Cost per conversion"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Spend"
+            },
+            {
+              "aggregation": "average",
+              "field": "ROAS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "eefbcf2a-54d6-4a57-9357-6ad8319302b7",
+      "name": "Summarize Meta input (current year)",
+      "type": "n8n-nodes-base.summarize",
+      "position": [
+        1168,
+        1824
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9c2f8b9a-e964-49a0-8837-efb0dfd7bcae",
+              "name": "Impressions",
+              "type": "number",
+              "value": "={{ $json.data[0].impressions }}"
+            },
+            {
+              "id": "8b524518-1268-4971-b5c9-ae7da09d94f9",
+              "name": "CPM",
+              "type": "number",
+              "value": "={{ $json.data[0].cpm }}"
+            },
+            {
+              "id": "ca7279b9-c643-425f-aa99-cb17146e9994",
+              "name": "Clicks",
+              "type": "number",
+              "value": "={{ $json.data[0].inline_link_clicks }}"
+            },
+            {
+              "id": "591288f7-e8cf-445e-872a-5b83f997b825",
+              "name": "CTR",
+              "type": "number",
+              "value": "={{ $json.data[0].inline_link_click_ctr }}"
+            },
+            {
+              "id": "dc1a43da-3f3a-4dca-bbde-904222d7f693",
+              "name": "Conversions",
+              "type": "number",
+              "value": "={{ $json.data[0].conversions[0].value }}"
+            },
+            {
+              "id": "eac0b53e-c452-40b8-92bc-8af8ea349984",
+              "name": "=Cost per conversion",
+              "type": "number",
+              "value": "={{ $json.data[0].cost_per_conversion[0].value }}"
+            },
+            {
+              "id": "c6cac2d8-b8f8-4b2a-9bcc-1c325db78799",
+              "name": "ROAS",
+              "type": "number",
+              "value": "={{ $json.data[0].purchase_roas[0].value }}"
+            },
+            {
+              "id": "b96439be-189d-4ebe-b49e-d5c31fefe9f0",
+              "name": "Spend",
+              "type": "number",
+              "value": "={{ $json.data[0].spend }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2d198ebb-ce3a-4d00-a26c-676abed788df",
+      "name": "Assign Meta data from input (current year)",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        944,
+        1824
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9c2f8b9a-e964-49a0-8837-efb0dfd7bcae",
+              "name": "Impressions",
+              "type": "number",
+              "value": "={{ $json.data[0].impressions }}"
+            },
+            {
+              "id": "8b524518-1268-4971-b5c9-ae7da09d94f9",
+              "name": "CPM",
+              "type": "number",
+              "value": "={{ $json.data[0].cpm }}"
+            },
+            {
+              "id": "ca7279b9-c643-425f-aa99-cb17146e9994",
+              "name": "Clicks",
+              "type": "number",
+              "value": "={{ $json.data[0].inline_link_clicks }}"
+            },
+            {
+              "id": "591288f7-e8cf-445e-872a-5b83f997b825",
+              "name": "CTR",
+              "type": "number",
+              "value": "={{ $json.data[0].inline_link_click_ctr }}"
+            },
+            {
+              "id": "dc1a43da-3f3a-4dca-bbde-904222d7f693",
+              "name": "Conversions",
+              "type": "number",
+              "value": "={{ $json.data[0].conversions[0].value }}"
+            },
+            {
+              "id": "eac0b53e-c452-40b8-92bc-8af8ea349984",
+              "name": "=Cost per conversion",
+              "type": "number",
+              "value": "={{ $json.data[0].cost_per_conversion[0].value }}"
+            },
+            {
+              "id": "b866032c-07ac-440b-a81a-d9787926b9d6",
+              "name": "ROAS",
+              "type": "number",
+              "value": "={{ $json.data[0].purchase_roas[0].value }}"
+            },
+            {
+              "id": "b96439be-189d-4ebe-b49e-d5c31fefe9f0",
+              "name": "Spend",
+              "type": "number",
+              "value": "={{ $json.data[0].spend }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "af305f9c-6b10-4ce8-98cf-4a2a3fac45f8",
+      "name": "Assign Meta data input (previous year)",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1744,
+        1824
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "Impressions"
+            },
+            {
+              "aggregation": "average",
+              "field": "CPM"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Clicks"
+            },
+            {
+              "aggregation": "average",
+              "field": "CTR"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Conversions"
+            },
+            {
+              "aggregation": "average",
+              "field": "Cost per conversion"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Spend"
+            },
+            {
+              "aggregation": "average",
+              "field": "ROAS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4b8b1b32-5a14-462e-ba47-d0f3739c0f89",
+      "name": "Summarize Meta data input (previous year)",
+      "type": "n8n-nodes-base.summarize",
+      "position": [
+        2048,
+        1824
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "const currentData = $('Summarize Meta input (current year)').first().json;\nconst previousData = $('Summarize Meta data input (previous year)').first().json;\n\nfunction parseNumber(value) {\n    if (typeof value === 'string') {\n        return parseFloat(value.replace(/\\./g, '').replace(',', '.'));\n    }\n    return value || 0;\n}\n\nfunction formatNumber(number, decimals = 0) {\n    if (number === 0) return \"0\";\n    return parseNumber(number).toLocaleString('de-DE', {\n        minimumFractionDigits: decimals,\n        maximumFractionDigits: decimals\n    });\n}\n\nfunction calculateCPM(cpm) {\n    return parseNumber(cpm);\n}\n\nreturn [{\n    current_impressions: formatNumber(currentData.sum_Impressions),\n    current_cpm: formatNumber(calculateCPM(currentData.average_CPM), 2),\n    current_clicks: formatNumber(currentData.sum_Clicks),\n    current_ctr: formatNumber(parseNumber(currentData.average_CTR), 2),\n    current_conversions: formatNumber(currentData.sum_Conversions, 2),\n    current_cost_per_conversion: formatNumber(currentData.average_Cost_per_conversion, 2),\n    current_cost: formatNumber(currentData.sum_Spend, 2),\n    current_roas: formatNumber(parseNumber(currentData.average_ROAS), 2),\n    \n    previous_impressions: formatNumber(previousData.sum_Impressions),\n    previous_cpm: formatNumber(calculateCPM(previousData.average_CPM), 2),\n    previous_clicks: formatNumber(previousData.sum_Clicks),\n    previous_ctr: formatNumber(parseNumber(previousData.average_CTR), 2),\n    previous_conversions: formatNumber(previousData.sum_Conversions, 2),\n    previous_cost_per_conversion: formatNumber(previousData.average_Cost_per_conversion || 0, 2),\n    previous_cost: formatNumber(previousData.sum_Spend, 2),\n    previous_roas: formatNumber(parseNumber(previousData.average_ROAS), 2)\n}];"
+      },
+      "id": "f4f95f4f-7537-4453-a32e-637333e4b5d5",
+      "name": "Format all Meta data for LLM",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2240,
+        1824
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Please analyze the following data and output the results in table form:\n\n| Metric | Last 7 Days | Previous Year | Percentage Change |\n|--------|-------------|---------------|-------------------|\n| Total Impressions | {{$json.current_impressions}} | {{$json.previous_impressions}} | Percentage Change |\n| CPM | {{$json.current_cpm}} | {{$json.previous_cpm}} | Percentage Change |\n| Total Clicks | {{$json.current_clicks}} | {{$json.previous_clicks}} | Percentage Change |\n| CTR | {{$json.current_ctr}} | {{$json.previous_ctr}} | Percentage Change |\n| Conversions | {{$json.current_conversions}} | {{$json.previous_conversions}} | Percentage Change |\n| Cost per Conversion | {{$json.current_cost_per_conversion}} | {{$json.previous_cost_per_conversion}} | Percentage Change |\n| ROAS | {{ $json.current_roas }} | {{ $json.previous_roas }} | Percentage Change |\n| Costs | {{$json.current_cost}} | {{$json.previous_cost}} | Percentage Change |\n\nNumber format:\n- Period (.) for thousands (e.g. 4.000)\n- Comma (,) for decimal numbers (e.g. 3,4)\n- Display CPM, Cost per Conversion, ROAS and Costs in €\n- CTR in percent\n\nPlease write a brief summary of the analyzed data above the table (in max 3 sentences!)\n\nIMPORTANT:\nWrite nothing except the summary and the table below it!\nNO INTRODUCTION, NO CONCLUSION!"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5a97e23e-1775-4707-8ee1-0e3382735507",
+      "name": "Processing for Google Ads report",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        2480,
+        1264
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "jsCode": "const currentData = $('Summarize input (current year)').first().json;\nconst previousData = $('Summarize input (previous year)').first().json;\n\nfunction formatNumber(number, decimals = 0) {\n   if (number === 0) return \"0\";\n   return number.toLocaleString('de-DE', {\n       minimumFractionDigits: decimals,\n       maximumFractionDigits: decimals\n   });\n}\n\nfunction calculateCPM(costMicros, impressions) {\n   if (impressions === 0) return 0;\n   return (costMicros / 1000000 / impressions) * 1000;\n}\n\nreturn [{\n   current_impressions: formatNumber(currentData.sum_Impressions),\n   current_cpm: formatNumber(calculateCPM(currentData.sum_Spend, currentData.sum_Impressions), 2),\n   current_clicks: formatNumber(currentData.sum_Clicks),\n   current_ctr: formatNumber(currentData.average_CTR * 100, 2),\n   current_conversions: formatNumber(currentData.sum_Conversions, 2),\n   current_cost_per_conversion: formatNumber(currentData.average_Cost_per_Conversion / 1000000, 2),\n   current_cost: formatNumber(currentData.sum_Spend / 1000000, 2),\n   current_roas: formatNumber(currentData.average_ROAS, 2),\n   \n   previous_impressions: formatNumber(previousData.sum_Impressions),\n   previous_cpm: formatNumber(calculateCPM(previousData.sum_Spend, previousData.sum_Impressions), 2),\n   previous_clicks: formatNumber(previousData.sum_Clicks),\n   previous_ctr: formatNumber(previousData.average_CTR * 100, 2),\n   previous_conversions: formatNumber(previousData.sum_Conversions, 2),\n   previous_cost_per_conversion: formatNumber(previousData.average_Cost_per_conversion / 1000000, 2),\n   previous_cost: formatNumber(previousData.sum_Spend / 1000000, 2),\n   previous_roas: formatNumber(previousData.average_ROAS, 2)\n}];"
+      },
+      "id": "19978f64-5432-4add-b026-8e2a61000c45",
+      "name": "Format all Google data for LLM",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2352,
+        1264
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9c2f8b9a-e964-49a0-8837-efb0dfd7bcae",
+              "name": "Page views",
+              "type": "number",
+              "value": "={{ $json.screenPageViews }}"
+            },
+            {
+              "id": "8b524518-1268-4971-b5c9-ae7da09d94f9",
+              "name": "Users",
+              "type": "number",
+              "value": "={{ $json.totalUsers }}"
+            },
+            {
+              "id": "ca7279b9-c643-425f-aa99-cb17146e9994",
+              "name": "Sessions",
+              "type": "number",
+              "value": "={{ $json.sessions }}"
+            },
+            {
+              "id": "591288f7-e8cf-445e-872a-5b83f997b825",
+              "name": "Sessions per user",
+              "type": "number",
+              "value": "={{ $json.sessionsPerUser }}"
+            },
+            {
+              "id": "dc1a43da-3f3a-4dca-bbde-904222d7f693",
+              "name": "Session duration",
+              "type": "number",
+              "value": "={{ $json.averageSessionDuration }}"
+            },
+            {
+              "id": "eac0b53e-c452-40b8-92bc-8af8ea349984",
+              "name": "=Conversions",
+              "type": "number",
+              "value": "={{ $json.ecommercePurchases }}"
+            },
+            {
+              "id": "b96439be-189d-4ebe-b49e-d5c31fefe9f0",
+              "name": "Value per Conversion",
+              "type": "number",
+              "value": "={{ $json.averagePurchaseRevenue }}"
+            },
+            {
+              "id": "94835d43-2fc8-49c0-97f0-6f0f8699337a",
+              "name": "Revenue",
+              "type": "number",
+              "value": "={{ $json.purchaseRevenue }}"
+            },
+            {
+              "id": "d70f8138-3b84-4b88-a98f-eb929e1cc29a",
+              "name": "date",
+              "type": "string",
+              "value": "={{ $json.date }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3a8e9d3f-0332-4028-8ef1-8a0a3a1f8cee",
+      "name": "Assign Google Analytics data input (current year)",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1008,
+        752
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "Page views"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Users"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Sessions"
+            },
+            {
+              "aggregation": "average",
+              "field": "Sessions per user"
+            },
+            {
+              "aggregation": "average",
+              "field": "Session duration"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Conversions"
+            },
+            {
+              "aggregation": "average",
+              "field": "Value per Conversion"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Revenue"
+            },
+            {
+              "field": "date"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4d3dc92b-08ea-4afd-9440-4b0f10bd7077",
+      "name": "Summarize Google Analytics input (current year)",
+      "type": "n8n-nodes-base.summarize",
+      "position": [
+        1232,
+        752
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aktuelles Datum\nconst now = new Date();\n\n// Gestern als Ende-Datum\nconst yesterday = new Date(now);\nyesterday.setDate(now.getDate() - 1);\n\n// Start-Datum (7 Tage vor gestern)\nconst weekStart = new Date(yesterday);\nweekStart.setDate(yesterday.getDate() - 6);\n\n// Vorjahreszeitraum\nconst lastYearStart = new Date(weekStart);\nlastYearStart.setFullYear(weekStart.getFullYear() - 1);\n\nconst lastYearEnd = new Date(yesterday);\nlastYearEnd.setFullYear(yesterday.getFullYear() - 1);\n\n// Formatierung YYYY-MM-DD\nfunction formatDate(date) {\n    return date.toISOString().split('T')[0];\n}\n\n// Ausgabe\nitems[0] = {\n  json: {\n    currentPeriod: {\n      since: formatDate(weekStart),\n      until: formatDate(yesterday)\n    },\n    lastYear: {\n      since: formatDate(lastYearStart),\n      until: formatDate(lastYearEnd)\n    }\n  }\n};\n\nreturn items;"
+      },
+      "id": "62253c6c-9e0f-460b-9665-3fd66074fed7",
+      "name": "Calculate date format for meta ads request s",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        480,
+        1824
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  // Berechnung des Startdatums: Vorjahr, gleiche Woche, 7 Tage zurück\n  startDate: (() => {\n    const date = new Date();\n    date.setFullYear(date.getFullYear() - 1); // Zurück ins Vorjahr\n    date.setDate(date.getDate() - 7); // 7 Tage zurück\n    return date.toISOString().split('T')[0];\n  })(),\n  \n  // Berechnung des Enddatums: Vorjahr, heutiges Datum\n  endDate: (() => {\n    const date = new Date();\n    date.setFullYear(date.getFullYear() - 1); // Zurück ins Vorjahr\n    return date.toISOString().split('T')[0];\n  })(),\n};\n"
+      },
+      "id": "97dc184e-52ca-4cd9-a95d-4a69c75e9b49",
+      "name": "Calculation same period previous year1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1472,
+        752
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9c2f8b9a-e964-49a0-8837-efb0dfd7bcae",
+              "name": "Page views",
+              "type": "number",
+              "value": "={{ $json.screenPageViews }}"
+            },
+            {
+              "id": "8b524518-1268-4971-b5c9-ae7da09d94f9",
+              "name": "Users",
+              "type": "number",
+              "value": "={{ $json.totalUsers }}"
+            },
+            {
+              "id": "ca7279b9-c643-425f-aa99-cb17146e9994",
+              "name": "Sessions",
+              "type": "number",
+              "value": "={{ $json.sessions }}"
+            },
+            {
+              "id": "591288f7-e8cf-445e-872a-5b83f997b825",
+              "name": "Sessions per user",
+              "type": "number",
+              "value": "={{ $json.sessionsPerUser }}"
+            },
+            {
+              "id": "dc1a43da-3f3a-4dca-bbde-904222d7f693",
+              "name": "Session duration",
+              "type": "number",
+              "value": "={{ $json.averageSessionDuration }}"
+            },
+            {
+              "id": "eac0b53e-c452-40b8-92bc-8af8ea349984",
+              "name": "=Conversions",
+              "type": "number",
+              "value": "={{ $json.ecommercePurchases }}"
+            },
+            {
+              "id": "b96439be-189d-4ebe-b49e-d5c31fefe9f0",
+              "name": "Value per conversion",
+              "type": "number",
+              "value": "={{ $json.averagePurchaseRevenue }}"
+            },
+            {
+              "id": "94835d43-2fc8-49c0-97f0-6f0f8699337a",
+              "name": "Revenue",
+              "type": "number",
+              "value": "={{ $json.purchaseRevenue }}"
+            },
+            {
+              "id": "dd8255c6-65b1-41ce-b596-70c09108d6e2",
+              "name": "=date",
+              "type": "string",
+              "value": "={{ $json.date }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "729a9c75-64a1-43a6-b25a-2cb4304ed44e",
+      "name": "Assign Google Analytics data input (previous year)",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1904,
+        752
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "Page views"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Users"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Sessions"
+            },
+            {
+              "aggregation": "average",
+              "field": "Sessions per user"
+            },
+            {
+              "aggregation": "average",
+              "field": "Session duration"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Conversions"
+            },
+            {
+              "aggregation": "average",
+              "field": "Value per conversion"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Revenue"
+            },
+            {
+              "field": "date"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3dda7915-f892-4048-b4c3-b171bdc26c72",
+      "name": "Summarize Google Analytics input (previous year)",
+      "type": "n8n-nodes-base.summarize",
+      "position": [
+        2128,
+        752
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fromEmail": "friedemann.schuetz@posteo.de",
+        "toEmail": "friedemann.schuetz@ep-reisen.de",
+        "subject": "Weekly Report: Online Marketing Report",
+        "html": "={{ $json.output }}",
+        "options": {}
+      },
+      "id": "c2adf67e-6671-4e02-8f0c-aa0d8bd533ad",
+      "name": "Send mail report",
+      "type": "n8n-nodes-base.emailSend",
+      "position": [
+        2640,
+        64
+      ],
+      "typeVersion": 2.1,
+      "webhookId": "a2bc6ee0-47c1-4667-bbbe-5571b9682644"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Please analyze the following data and output the results in table form:\n\n| Metric | Last 7 Days | Previous Year | Percentage Change |\n|--------|-------------|---------------|-------------------|\n| Total Impressions | {{$json.current_impressions}} | {{$json.previous_impressions}} | Percentage Change |\n| CPM | {{$json.current_cpm}} | {{$json.previous_cpm}} | Percentage Change |\n| Total Clicks | {{$json.current_clicks}} | {{$json.previous_clicks}} | Percentage Change |\n| CTR | {{$json.current_ctr}} | {{$json.previous_ctr}} | Percentage Change |\n| Conversions | {{$json.current_conversions}} | {{$json.previous_conversions}} | Percentage Change |\n| Cost per Conversion | {{$json.current_cost_per_conversion}} | {{$json.previous_cost_per_conversion}} | Percentage Change |\n| ROAS | {{ $json.current_roas }} | {{ $json.previous_roas }} | Percentage Change |\n| Costs | {{$json.current_cost}} | {{$json.previous_cost}} | Percentage Change |\n\nNumber format:\n- Period (.) for thousands (e.g. 4.000)\n- Comma (,) for decimal numbers (e.g. 3,4)\n- Display CPM, Cost per Conversion, ROAS and Costs in €\n- CTR in percent\n\nPlease write a brief summary of the analyzed data above the table (in max 3 sentences!)\n\nIMPORTANT:\nWrite nothing except the summary and the table below it!\nNO INTRODUCTION, NO CONCLUSION!"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "17b6c0c0-0d8d-4967-9554-83fbc7a608d9",
+      "name": "Processing for Meta Ads Report",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        2480,
+        1824
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Please analyze the following data and output the results in table form:\n| Metric                        | Last 7 Days | Previous Year | Percentage Change |\n|-------------------------------|-------------|---------------|-------------------|\n| Total Page Views              | {{ $('Summarize Google Analytics input (current year)').item.json.sum_Page_views }} | {{ $json.sum_Page_views }} | Percentage Change |\n| Total Users                   | {{ $('Summarize Google Analytics input (current year)').item.json.sum_Users }} | {{ $json.sum_Users }} | Percentage Change |\n| Total Sessions                | {{ $('Summarize Google Analytics input (current year)').item.json.sum_Sessions }} | {{ $json.sum_Sessions }} | Percentage Change |\n| Average Sessions per User     | {{ $('Summarize Google Analytics input (current year)').item.json.average_Sessions_per_user }} | {{ $json.average_Sessions_per_user }} | Percentage Change |\n| Average Session Duration      | {{ $('Summarize Google Analytics input (current year)').item.json.average_Session_duration }} | {{ $json.average_Session_duration }} | Percentage Change |\n| Total Purchases               | {{ $('Summarize Google Analytics input (current year)').item.json.sum_Conversions }} | {{ $json.sum_Conversions }} | Percentage Change |\n| Average Revenue per Purchase  | {{ $('Summarize Google Analytics input (current year)').item.json.average_Value_per_Conversion }} | {{ $json.average_Value_per_conversion }} | Percentage Change |\n| Total Revenue                 | {{ $('Summarize Google Analytics input (current year)').item.json.sum_Revenue }} | {{ $('Summarize Google Analytics input (previous year)').item.json.sum_Revenue }} | Percentage Change |\n\nNumber format:\n- Period (.) for thousands (e.g. 4.000)\n- Comma (,) for decimal numbers (e.g. 3,4)\n- Convert Average Session Duration to minutes instead of seconds\n- Average Revenue per Purchase and Total Revenue in €\n\nPlease write a brief summary of the analyzed data above the table (in max 3 sentences!)\n\nIMPORTANT:\nWrite nothing except the summary and the table below it!\nNO INTRODUCTION, NO CONCLUSION!"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "21c461bb-6fee-4097-a59b-fed74f959470",
+      "name": "Processing for Google Analytics Report",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        2480,
+        752
+      ],
+      "typeVersion": 1.7,
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Convert the following text from HTML to plain text:\n\n{{ $json.output }}\n\nPlease format the table so that each evaluation (Domain 1, Domain 2, Domain 3, Domain 4, Domain 5, Google Ads, Meta Ads) is its own paragraph! Also, please display only the summary (without the table), but incorporate the numbers into the running text!\n\nExample:\n\nDomain 1:\nxx,xxx page views (+x.xx%)\nxx,xxx users (-x.xx%)\n\nDomain 2:\nxx,xxx page views (+x.xx%)\nxx,xxx users (-x.xx%)\n\n<userStyle>Normal</userStyle>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c0d03c78-4055-412d-b70a-f818fbf2c862",
+      "name": "Processing for Telegram Report",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        2080,
+        288
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Expert in Data Processing and Email Generation in N8N\nYOU ARE AN EXPERT IN DATA PROCESSING AND EMAIL GENERATION IN N8N. YOUR TASK IS TO CREATE AN ENGLISH-LANGUAGE HTML EMAIL THAT COMPREHENSIVELY SUMMARIZES GOOGLE ANALYTICS AND GOOGLE ADS DATA FROM VARIOUS WORKFLOWS. YOU MUST FORMAT THE CAPTURED DATA ACCORDING TO THE SPECIFIED SPECIFICATIONS AND DESIGN THE EMAIL FOR OPTIMAL READABILITY.\n\n## Instructions\n\n### 1. Collect Summary\n- First, retrieve the summary and table for `Analytics_Domain_1` from the `Analytics_Domain_1` workflow.\n- Second, retrieve the summary and table for `Analytics_Domain_2` from the `Analytics_Domain_2` workflow.\n- Third, retrieve the summary and table for `Analytics_Domain_3` from the `Analytics_Domain_3` workflow.\n- Fourth, retrieve the summary and table for `Analytics_Domain_4` from the `Analytics_Domain_4` workflow.\n- Fifth, retrieve the summary and table for `Analytics_Domain_5` from the `Analytics_Domain_5` workflow.\n- Sixth, retrieve the summary and table for `Google_Ads` from the `Google_Ads` workflow.\n- Seventh, retrieve the summary and table for `Meta_Ads` from the `Meta_Ads` workflow.\n\n### 2. Email Structure\n- Begin the email with the following introduction:  \n  \"Hi Freddy,  \n  Here is your weekly Online Marketing Report for the last 7 days from Domain 1, Domain 2, Domain 3, Domain 4, Domain 5, as well as Google Ads and Meta Ads!\"\n\n- Create a separate section for each dataset:  \n  - **Domain 1**: Contains the summary and table from `Analytics_Domain_1`\n  - **Domain 2**: Contains the summary and table from `Analytics_Domain_2`\n  - **Domain 3**: Contains the summary and table from `Analytics_Domain_3`\n  - **Domain 4**: Contains the summary and table from `Analytics_Domain_4`\n  - **Domain 5**: Contains the summary and table from `Analytics_Domain_5`\n  - **Google Ads**: Contains the summary and table from `Google Ads`\n  - **Meta Ads**: Contains the summary and table from `Meta Ads`\n\n- Present the sections clearly and readably as HTML.\n\n### 3. Design and Formatting\n- Use simple HTML structures with clear section titles (e.g., `<h2>` for titles).\n- Present the summary as a paragraph (e.g., `<p>`).\n- The table should be cleanly formatted (e.g., with `<table>`, `<tr>`, `<td>`).\n- Keep the presentation clear and easy to read.\n\n### 4. No Conclusion, No Signature\n\n### HTML Output Structure\n\n```html\n<!DOCTYPE html>\n<html>\n<head>\n    <style>\n        body {\n            font-family: Arial, sans-serif;\n            line-height: 1.6;\n        }\n        h2 {\n            color: #333;\n        }\n        table {\n            width: 100%;\n            border-collapse: collapse;\n            margin: 10px 0;\n        }\n        table, th, td {\n            border: 1px solid #ddd;\n        }\n        th, td {\n            padding: 8px;\n            text-align: left;\n        }\n        th {\n            background-color: #f4f4f4;\n        }\n    </style>\n</head>\n<body>\n    <p>Hi,</p>\n    <p>Here is your weekly Online Marketing Report for the last 7 days from Domain 1, Domain 2, Domain 3, Domain 4, Domain 5, as well as Google Ads and Meta Ads!</p>\n    \n    <h2>Domain 1</h2>\n    <p>[Summary from Analytics_Domain_1 will be inserted here]</p>\n    <table>\n        [Table content from Analytics_Domain_1 will be inserted here]\n    </table>\n    \n    <h2>Domain 2</h2>\n    <p>[Summary from Analytics_Domain_2 will be inserted here]</p>\n    <table>\n        [Table content from Analytics_Domain_2 will be inserted here]\n    </table>\n</body>\n</html>\n```\n\n### 5. Output\n- Format the entire HTML content as a string for email transmission.\n\n### What Not to Do\n- No unwanted closings or signatures\n- No unstructured, hard-to-read data formatting\n- No missing sections or titles\n- No copying of data without HTML formatting",
+        "options": {}
+      },
+      "id": "67e6104a-cbb6-4394-a90a-e586ffbaa928",
+      "name": "Weekly Report Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1184,
+        64
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "chatId": "1810565648",
+        "text": "={{ $json.message.content }}",
+        "additionalFields": {}
+      },
+      "id": "d35e099f-6939-427e-992c-bdbdd1bbfb87",
+      "name": "Send Telegram report",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2640,
+        288
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "3e0ae440-a7fc-482f-83c3-774187c888b3"
+    },
+    {
+      "parameters": {
+        "content": "Welcome to Online Marketing Weekly Report Workflow!\n\nThis workflow has the following sequence:\n\n1. time trigger (e.g. every Monday at 7 a.m.)\n2. retrieval of Online Marketing data from the last 7 days (via sub workflows)\n3. assignment and summary of the data\n4. retrieval of Online Marketing data from the same time period of the previous year\n5. allocation and summary of the data\n6. preparation in tabular form and brief analysis by AI.\n7. sending the report as an email\n8. preparation in short form by AI for Telegram (optional)\n9. sending as Telegram message.\n\nThe following accesses are required for the workflow:\n- Google Analytics (via Google Analytics API): [Documentation](https://docs.n8n.io/integrations/builtin/credentials/google/)\n- Google Ads (via HTTP Request -&gt; Google Ads API):[Documentation](https://docs.n8n.io/integrations/builtin/credentials/google/)\n- Meta Ads (via Facebook Graph API): [Documentation](https://docs.n8n.io/integrations/builtin/credentials/facebookgraph/)\n- AI API access (e.g. via OpenAI, Anthropic, Google or Ollama)\n- SMTP access data (for sending the mail)\n- Telegram access data (optional for sending as Telegram message): [Documentation](https://docs.n8n.io/integrations/builtin/credentials/telegram/)\n\nYou can contact me via LinkedIn, if you have any questions: https://www.linkedin.com/in/friedemann-schuetz",
+        "height": 2180,
+        "width": 440
+      },
+      "id": "7e0fd460-a596-44de-ab10-1e27619f88d0",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        0
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Meta_Ads": {
+      "ai_tool": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Processing for Google Analytics Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google_Ads": {
+      "ai_tool": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Processing for Google Ads report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator3": {
+      "ai_tool": [
+        [
+          {
+            "node": "Processing for Meta Ads Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analytics_Domain_1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analytics_Domain_2": {
+      "ai_tool": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analytics_Domain_3": {
+      "ai_tool": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analytics_Domain_4": {
+      "ai_tool": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analytics_Domain_5": {
+      "ai_tool": [
+        [
+          {
+            "node": "Weekly Report Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Report Agent": {
+      "main": [
+        [
+          {
+            "node": "Processing for Telegram Report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send mail report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Call Google Analytics data: Last 7 days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign input (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Summarize input (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format all Meta data for LLM": {
+      "main": [
+        [
+          {
+            "node": "Processing for Meta Ads Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format all Google data for LLM": {
+      "main": [
+        [
+          {
+            "node": "Processing for Google Ads report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processing for Telegram Report": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize input (current year)": {
+      "main": [
+        [
+          {
+            "node": "Calculation same period previous year",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Meta Ads Data: Last 7 days": {
+      "main": [
+        [
+          {
+            "node": "Assign Meta data from input (current year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize input (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Format all Google data for LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format data input (current year)": {
+      "main": [
+        [
+          {
+            "node": "Assign data from input (current year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Google Ads Data: Last 7 days": {
+      "main": [
+        [
+          {
+            "node": "Format data input (current year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format data input (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Assign input (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Meta input (current year)": {
+      "main": [
+        [
+          {
+            "node": "Call Meta Ads Data: Last 7 days (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign data from input (current year)": {
+      "main": [
+        [
+          {
+            "node": "Summarize input (current year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculation same period previous year": {
+      "main": [
+        [
+          {
+            "node": "Call Google Ads Data: Last 7 days (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Meta data input (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Summarize Meta data input (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculation same period previous year1": {
+      "main": [
+        [
+          {
+            "node": "Call Google Analytics data: Last 7 days (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Google Analytics data: Last 7 days": {
+      "main": [
+        [
+          {
+            "node": "Assign Google Analytics data input (current year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Meta data input (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Format all Meta data for LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Meta data from input (current year)": {
+      "main": [
+        [
+          {
+            "node": "Summarize Meta input (current year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate date format for meta ads request s": {
+      "main": [
+        [
+          {
+            "node": "Call Meta Ads Data: Last 7 days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Meta Ads Data: Last 7 days (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Assign Meta data input (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Google Analytics input (current year)": {
+      "main": [
+        [
+          {
+            "node": "Calculation same period previous year1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Google Analytics input (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Processing for Google Analytics Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Google Analytics data input (current year)": {
+      "main": [
+        [
+          {
+            "node": "Summarize Google Analytics input (current year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Google Ads Data: Last 7 days (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Format data input (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Google Analytics data input (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Summarize Google Analytics input (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Google Analytics data: Last 7 days (previous year)": {
+      "main": [
+        [
+          {
+            "node": "Assign Google Analytics data input (previous year)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate date format for Google Ads request (last 7 days)": {
+      "main": [
+        [
+          {
+            "node": "Call Google Ads Data: Last 7 days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6baac0cb-de5d-400f-a7aa-aba6d2bb1c20",
+  "meta": {
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "t2ZpfU9BbRaX6hDC",
+  "tags": []
+}

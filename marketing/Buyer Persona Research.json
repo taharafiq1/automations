@@ -1,0 +1,639 @@
+{
+  "name": "Buyer Persona Research",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Buyer Persona Research",
+        "formDescription": "Buyer Persona Research",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Product",
+              "placeholder": "Enter Your Product Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "How Many Buyer Personas do You Need",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "1"
+                  },
+                  {
+                    "option": "2"
+                  },
+                  {
+                    "option": "3"
+                  },
+                  {
+                    "option": "4"
+                  },
+                  {
+                    "option": "5"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        -80
+      ],
+      "id": "fd27891a-d28a-47aa-b475-3278e45b4d53",
+      "name": "On form submission",
+      "webhookId": "b1db8ca7-9c42-4233-b8b5-3275a380bf88"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Digital Marketing Persona Generator: {{ $json.Product }} Buyer Personas\n\n## Context\nYou are an experienced digital marketing specialist with extensive expertise in market research and persona development. Your task is to create Most Relevant {{ $json['How Many Buyer Personas do You Need'] }} distinct buyer personas for {{ $json.Product }}, reflecting different market segments with unique characteristics and purchasing behaviors.\n\n## Tools\n\nYou have access to Think tool, use this tool to reason your outputs. \n\n## Instructions\n1. Generate Most Relevant ({{ $json['How Many Buyer Personas do You Need'] }}) comprehensive buyer personas for {{ $json.Product }}products.\n2. Each persona should be realistic, data-informed, and represent a distinct segment of potential customers\n3. Give each persona a memorable name that reflects their identity\n4. Keep all responses concise - do not provide detailed variables, keep it at minimum level.\n5. Format your response using the exact structure provided below\n6. Ensure personas are diverse yet realistic for the product's market\n7. Base your personas on market research insights about product's consumers\n\n\n## Response Format\n\nFor each persona, describe all the parameters that are highly relevant to Persona.\nFor each persona, structure your response exactly as follows:\n\n* Product Name:\n* Buyer Persona:\n* Persona Name:\n* Age: (Give a Range)\n* Gender: \n* Location: (Urban/Metropolitan areas/Suburban/University towns etc.)\n* Income Level: \n* Education Level: \n* Occupation: \n* Marital Status: \n\n\n* Personality Traits: \n* Interests and Hobbies: \n* Values: \n* Lifestyle: \n* Attitudes: \n\n\n* Buying Motivation:\n* Buying Concerns:\n* Shopping Channels:\n* Frequency of Purchase:\n* Brand Loyalty:\n\n\n* Pain Points: [2-3 words]\n* Challenges: [2-3 words]\n\n\n* Short Term Goals: [2-3 words]\n* Long Term Goals: [2-3 words]\n\n\n* Preferred Platforms:\n* Content Types:\n* Influencers Followed:\n* Media Frequency:\n\n\n* Awareness:\n* Consideration:\n* Decision:\n* Retention:\n\n\n##Response Example:\nFor example one persona for peanut butter could be \nPersona: College Students\nAge: 18-25\nGender: All Genders \nlocation: Urabn/university towns\nIncome: Low to Mid\nEduction: High School/College\nOccupation: Student\nMarital status: Single\nPersonality Traits: Trendy & Social,\nHobbies & Interests: Social media, Fitness,Travel\nValues: Affordability, Convenience\nLifestyle: Active, Budget conscious\nAttitudes: Open to new products\nBuying Motivation: Affordable nutrition\nConcerns: Price & Availability \nShopping Channel: Online & Campus Stores\nFrequency of Purchase: Bi-weekly \nBrand Loyalty: Low to Moderate\nPain Points: Affordable options & Availability\nChallenges: Budget constraints, Peer influence\nGoals & Objectives: Stay fit, Save money\nLong-term Goals: Achieve career goals\nPreferred Platforms: Instagram, TikTok\nContent Types: Trendy videos, Memes\nInfluencers Followed: Student influencers\nMedia Frequency: High\nAwareness: Campus promotions, Ads\nConsideration: Discount offers\nDecision: Peer recommendations\nRetention: Student discounts\nAs these parameters are directly related to college students. Come up with highly relevant details to the persona.\n\n## Additional Guidelines\n- Ensure your personas reflect realistic market segments\n- Consider how different demographics might use this product differently\n- Account for varied price sensitivities and quality preferences\n- Include digital and traditional shopping behaviors\n- Reflect realistic media consumption habits for each demographic\n- Consider both emotional and practical purchasing factors\n\nCreate Most Relevant {{ $json['How Many Buyer Personas do You Need'] }} distinct buyer personas now, ensuring they represent different market segments with unique characteristics and behaviors, while maintaining the concise format for each bullet point.\n\n## Important:\n\nProvide response to all these parameters in JSON format that can be fed directly to google sheets.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        224,
+        -80
+      ],
+      "id": "8c8fc4ea-a189-4fcf-bd96-83cc2604074e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        464,
+        144
+      ],
+      "id": "1ebae52c-9feb-46b1-8753-0c80850e4cec",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1i3ofyh883rKSuuw9uV2DALIxJuIlyddZEPwA8sFEQI4",
+          "mode": "list",
+          "cachedResultName": "Buyer Personas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1i3ofyh883rKSuuw9uV2DALIxJuIlyddZEPwA8sFEQI4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1393405900,
+          "mode": "list",
+          "cachedResultName": "Buyer Personas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1i3ofyh883rKSuuw9uV2DALIxJuIlyddZEPwA8sFEQI4/edit#gid=1393405900"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "Age": "={{ $json.Age }}",
+            "Gender": "={{ $json.Gender }}",
+            "Location": "={{ $json.Location }}",
+            "Income Level": "={{ $json['Income Level'] }}",
+            "Education Level": "={{ $json['Buyer Persona - Health-Conscious Professional']['Education Level'] }}",
+            "Occupation": "={{ $json['Buyer Persona - Health-Conscious Professional'].Occupation }}",
+            "Marital Status": "={{ $json['Buyer Persona - Health-Conscious Professional']['Marital Status'] }}",
+            "Personality Traits": "={{ $json['Buyer Persona - Health-Conscious Professional']['Personality Traits'] }}",
+            "Values": "={{ $json['Buyer Persona - Health-Conscious Professional'].Values }}",
+            "Lifestyle": "={{ $json['Buyer Persona - Health-Conscious Professional'].Lifestyle }}",
+            "Attitudes": "={{ $json['Buyer Persona - Health-Conscious Professional'].Attitudes }}",
+            "Buying Motivation": "={{ $json['Buyer Persona - Health-Conscious Professional']['Buying Motivation'] }}",
+            "Buying Concerns": "={{ $json['Buyer Persona - Health-Conscious Professional']['Buying Concerns'] }}",
+            "Shopping Channels": "={{ $json['Buyer Persona - Health-Conscious Professional']['Shopping Channels'] }}",
+            "Frequency of Purchase": "={{ $json['Buyer Persona - Health-Conscious Professional']['Frequency of Purchase'] }}",
+            "Brand Loyalty": "={{ $json['Buyer Persona - Health-Conscious Professional']['Brand Loyalty'] }}",
+            "Pain Points": "={{ $json['Buyer Persona - Health-Conscious Professional']['Pain Points'] }}",
+            "Challenges": "={{ $json['Buyer Persona - Health-Conscious Professional'].Challenges }}",
+            "Preferred Platforms": "={{ $json['Buyer Persona - Health-Conscious Professional']['Preferred Platforms'] }}",
+            "Content Types": "={{ $json['Buyer Persona - Health-Conscious Professional']['Content Types'] }}",
+            "Influencers Followed": "={{ $json['Buyer Persona - Health-Conscious Professional']['Influencers Followed'] }}",
+            "Media Frequency": "={{ $json['Buyer Persona - Health-Conscious Professional']['Media Frequency'] }}",
+            "Awareness": "={{ $json['Buyer Persona - Health-Conscious Professional'].Awareness }}",
+            "Consideration": "={{ $json['Buyer Persona - Health-Conscious Professional'].Consideration }}",
+            "Decision": "={{ $json['Buyer Persona - Health-Conscious Professional'].Decision }}",
+            "Retention": "={{ $json['Buyer Persona - Health-Conscious Professional'].Retention }}",
+            "Persona Name": "={{ $json['Buyer Persona'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Persona Name",
+              "displayName": "Persona Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Age",
+              "displayName": "Age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Gender",
+              "displayName": "Gender",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Income Level",
+              "displayName": "Income Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Education Level",
+              "displayName": "Education Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Occupation",
+              "displayName": "Occupation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Marital Status",
+              "displayName": "Marital Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Personality Traits",
+              "displayName": "Personality Traits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interests & Hobbies",
+              "displayName": "Interests & Hobbies",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Values",
+              "displayName": "Values",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lifestyle",
+              "displayName": "Lifestyle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Attitudes",
+              "displayName": "Attitudes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Buying Motivation",
+              "displayName": "Buying Motivation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Buying Concerns",
+              "displayName": "Buying Concerns",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Shopping Channels",
+              "displayName": "Shopping Channels",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Frequency of Purchase",
+              "displayName": "Frequency of Purchase",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Brand Loyalty",
+              "displayName": "Brand Loyalty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pain Points",
+              "displayName": "Pain Points",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Challenges",
+              "displayName": "Challenges",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Short Term Goals",
+              "displayName": "Short Term Goals",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Long Term Goals",
+              "displayName": "Long Term Goals",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Preferred Platforms",
+              "displayName": "Preferred Platforms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Content Types",
+              "displayName": "Content Types",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Influencers Followed",
+              "displayName": "Influencers Followed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Media Frequency",
+              "displayName": "Media Frequency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Awareness",
+              "displayName": "Awareness",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Consideration",
+              "displayName": "Consideration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Decision",
+              "displayName": "Decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Retention",
+              "displayName": "Retention",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Buyer Persona",
+              "displayName": "Buyer Persona",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interests and Hobbies",
+              "displayName": "Interests and Hobbies",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        816,
+        32
+      ],
+      "id": "5a065694-c1c2-4c91-b520-5a22bdc2dc82",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = items[0].json.output;\nconst jsonString = raw.replace(/```json|```/g, '').trim();\nconst parsed = JSON.parse(jsonString);\nreturn parsed.map(persona => ({ json: persona }));\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        32
+      ],
+      "id": "0bdae03a-bf9d-4673-9bce-b293153014ed",
+      "name": "Format Output"
+    },
+    {
+      "parameters": {
+        "sendTo": "you@gmail.com",
+        "subject": "New Persona Generated",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Persona Creater"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        816,
+        -176
+      ],
+      "id": "f42da81a-ef40-447c-b3b8-e86a40fc1de3",
+      "name": "Gmail",
+      "webhookId": "874a9d3d-54a8-4823-aa0f-7a149784e775",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "F8FhGJsXByMlZ18Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = items[0].json.output;\n\n// Step 1: Clean and Parse the JSON\nconst clean = raw.replace(/```json|```/g, '').trim();\nlet personas;\ntry {\n  personas = JSON.parse(clean);\n} catch (err) {\n  throw new Error('Failed to parse JSON: ' + err.message);\n}\n\n// Step 2: Format as HTML\nlet html = '<h2>🎯 Generated Buyer Personas</h2>';\n\nfor (const data of personas) {\n  html += `\n    <hr />\n    <h3>${data[\"Persona Name\"]} (${data[\"Buyer Persona\"]})</h3>\n    <ul>\n      <li><strong>Product:</strong> ${data[\"Product Name\"]}</li>\n      <li><strong>Age:</strong> ${data[\"Age\"]}</li>\n      <li><strong>Gender:</strong> ${data[\"Gender\"]}</li>\n      <li><strong>Location:</strong> ${data[\"Location\"]}</li>\n      <li><strong>Income Level:</strong> ${data[\"Income Level\"]}</li>\n      <li><strong>Education Level:</strong> ${data[\"Education Level\"]}</li>\n      <li><strong>Occupation:</strong> ${data[\"Occupation\"]}</li>\n      <li><strong>Marital Status:</strong> ${data[\"Marital Status\"]}</li>\n      <li><strong>Personality Traits:</strong> ${data[\"Personality Traits\"]}</li>\n      <li><strong>Interests and Hobbies:</strong> ${data[\"Interests and Hobbies\"]}</li>\n      <li><strong>Values:</strong> ${data[\"Values\"]}</li>\n      <li><strong>Lifestyle:</strong> ${data[\"Lifestyle\"]}</li>\n      <li><strong>Attitudes:</strong> ${data[\"Attitudes\"]}</li>\n      <li><strong>Buying Motivation:</strong> ${data[\"Buying Motivation\"]}</li>\n      <li><strong>Buying Concerns:</strong> ${data[\"Buying Concerns\"]}</li>\n      <li><strong>Shopping Channels:</strong> ${data[\"Shopping Channels\"]}</li>\n      <li><strong>Frequency of Purchase:</strong> ${data[\"Frequency of Purchase\"]}</li>\n      <li><strong>Brand Loyalty:</strong> ${data[\"Brand Loyalty\"]}</li>\n      <li><strong>Pain Points:</strong> ${data[\"Pain Points\"]}</li>\n      <li><strong>Challenges:</strong> ${data[\"Challenges\"]}</li>\n      <li><strong>Short Term Goals:</strong> ${data[\"Short Term Goals\"]}</li>\n      <li><strong>Long Term Goals:</strong> ${data[\"Long Term Goals\"]}</li>\n      <li><strong>Preferred Platforms:</strong> ${data[\"Preferred Platforms\"]}</li>\n      <li><strong>Content Types:</strong> ${data[\"Content Types\"]}</li>\n      <li><strong>Influencers Followed:</strong> ${data[\"Influencers Followed\"]}</li>\n      <li><strong>Media Frequency:</strong> ${data[\"Media Frequency\"]}</li>\n      <li><strong>Awareness:</strong> ${data[\"Awareness\"]}</li>\n      <li><strong>Consideration:</strong> ${data[\"Consideration\"]}</li>\n      <li><strong>Decision:</strong> ${data[\"Decision\"]}</li>\n      <li><strong>Retention:</strong> ${data[\"Retention\"]}</li>\n    </ul>\n  `;\n}\n\n// Return the final HTML content as output\nreturn [\n  {\n    json: {\n      html\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        -176
+      ],
+      "id": "5cd30667-677f-421e-904b-9c03ca7dfde8",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        144
+      ],
+      "id": "2657f5e1-6b8c-428c-bedf-ee5ccc1dc9b0",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Output": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "PbHR0Z5zx7xRFk9v"
+  },
+  "versionId": "bfa7dc75-38c1-4658-a3d1-479011bb52f9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "f7PlDixjAbjDNNJI",
+  "tags": []
+}

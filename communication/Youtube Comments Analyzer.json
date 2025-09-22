@@ -1,0 +1,351 @@
+{
+  "name": "Youtube Comments Analyzer",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Conversion Rate Optimizer",
+        "formDescription": "Get Summary of Youtube Comments",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "=Youtube Video URL",
+              "placeholder": "https://www.youtube.com/watch?v=_qr7ogLpTJs",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Comments to Scrape",
+              "fieldType": "number",
+              "placeholder": "1-100",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Enter your email to receive summary of Comments"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Get Summary"
+        }
+      },
+      "id": "472f5096-a98d-4eb4-8eda-1358fcf122de",
+      "name": "Video URL",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        -96,
+        -288
+      ],
+      "webhookId": "8d3bdaaa-0a14-492c-8b52-e25adbce1d27",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Run this for each input item\nreturn items.map(item => {\n  const input = item.json[\"Youtube Video URL\"];\n\n  const regex = /(?:youtube\\.com\\/.*v=|youtu\\.be\\/|youtube\\.com\\/embed\\/|^)([a-zA-Z0-9_-]{11})/;\n\n  const match = input.match(regex);\n\n  let videoId = null;\n\n  if (match && match[1]) {\n    videoId = match[1];\n  } else if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {\n    videoId = input;\n  } else {\n    throw new Error(`Invalid YouTube input: ${input}`);\n  }\n\n  return {\n    json: {\n      videoId\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -288
+      ],
+      "id": "2db967ab-ebc7-4ba4-abdc-878f114c343b",
+      "name": "Get Video ID"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.googleapis.com/youtube/v3/commentThreads",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "youTubeOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet"
+            },
+            {
+              "name": "videoId",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "maxResults",
+              "value": "={{ $('Video URL').item.json['Comments to Scrape'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8599ea83-0817-4074-a2ae-c0abe54f2402",
+      "name": "Get Comments",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        560,
+        -288
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "ojlyyQFudZ0RTfGZ",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Assumes the input is an array of comment objects from the YouTube API\n// Each item has a \"snippet.topLevelComment.snippet\" structure\n\nconst input = items[0].json.items; // assumes input from previous node is in items[0].json.items\n\nconst comments = input.map(item => {\n  const snippet = item.snippet.topLevelComment.snippet;\n  return {\n    author: snippet.authorDisplayName,\n    comment: snippet.textDisplay\n  };\n});\n\n// You can return it as a single string (for AI agents), or as an array\n\n// OPTION A: Return as a single formatted string (best for feeding into LLM)\nconst formatted = comments.map(c => `Author: ${c.author}\\nComment: ${c.comment}`).join('\\n\\n');\n\nreturn [\n  {\n    json: {\n      combinedComments: formatted\n    }\n  }\n];\n\n// OPTION B: If you prefer JSON array instead, replace return above with:\n// return [{ json: { comments } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -288
+      ],
+      "id": "1c04daf0-9b2b-4644-83fd-c43c04d3ac20",
+      "name": "Format Comments"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert YouTube comment analyst specializing in audience feedback analysis. Your task is to analyze comments from the YouTube video and provide actionable insights.\n\n## Analysis Framework\n###AUDIENCE SENTIMENT OVERVIEW\nProvide a concise summary of the overall sentiment in the comments section. Is it predominantly positive, negative, or mixed? Include any notable patterns in emotional responses. If possible, estimate rough percentages (e.g., \"approximately 70% positive, 20% neutral, 10% negative\").\n\n### CONTENT STRENGTHS (WHAT VIEWERS LIKED)\nIdentify 3-5 specific aspects of the video that received positive feedback:\n- What parts/moments/elements did viewers explicitly praise?\n- What aspects generated excitement or enthusiasm?\n- Are there any specific timestamps or sections that received particularly positive attention?\n- Include direct quote examples from comments when relevant (keeping them brief).\n\n### CONTENT WEAKNESSES (WHAT VIEWERS DISLIKED)\nIdentify 3-5 specific criticisms or negative feedback points:\n\nWhat aspects of the video did viewers criticize?\nWere there any quality issues mentioned (audio, video, pacing, etc.)?\nAny content elements that were confusing or poorly received?\nAny disagreements with the presenter's points or approach?\nInclude brief quote examples when relevant.\n\n### AUDIENCE PAIN POINTS & QUESTIONS\n\nWhat specific problems or challenges did viewers mention in relation to the video topic?\nWhat questions were repeatedly asked in the comments?\nWhat clarifications did viewers seek?\nWhat related topics did viewers express interest in learning more about?\n\n### KEYWORD & TOPIC ANALYSIS\n\nIdentify recurring keywords, phrases or topics in the comments\nNote any industry/niche-specific terminology or jargon that appears frequently\nHighlight any trending topics or current events mentioned\n\n### COMPETITOR & EXTERNAL REFERENCES\n\nNote any comparisons to other creators or content\nIdentify any external resources, products, or services mentioned by commenters\n\n##Output Format\n\nStructure your analysis with clear headings and bullet points for each section. Be concise but thorough. Use direct quotes sparingly and only when they provide significant value. Focus on actionable insights rather than generalizations.\n\nKeep in context Video Title while analyzing comments to create more informed output.\n\nTitle of the Video: {{ $('YouTube').item.json.snippet.title }}\n\n\nComments to analyze are as follows:\n{{ $json.combinedComments }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1008,
+        -288
+      ],
+      "id": "077239e8-5e74-4476-9365-4d203a506c0c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.0-flash-exp:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        -64
+      ],
+      "id": "18a04433-1ef4-4f38-a470-59253e532996",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UHvg8n6n1dmTkvyp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08NX9HLHE1",
+          "mode": "list",
+          "cachedResultName": "debugging"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1376,
+        -288
+      ],
+      "id": "db5f99a0-6175-4f1f-a7f7-85e0cffa17fe",
+      "name": "Slack",
+      "webhookId": "b9864f7d-907a-44f7-b1bb-3e2ca9f433f4",
+      "credentials": {
+        "slackApi": {
+          "id": "uc2x5EBnyRdtdFLg",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "get",
+        "videoId": "={{ $json.videoId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -288
+      ],
+      "id": "f0ea6d4a-dc31-4930-8ede-3d7b4cff154c",
+      "name": "YouTube",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "ojlyyQFudZ0RTfGZ",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=you@gmail.com",
+        "subject": "New Comment Analysis",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "={{ $('Video URL').item.json.Email }}",
+          "senderName": "Comments Analyzer"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1824,
+        -288
+      ],
+      "id": "16860bfe-6a10-409b-a185-08156e94a81e",
+      "name": "Gmail",
+      "webhookId": "5b919d05-f921-4a15-b0f8-4e2533793258",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "F8FhGJsXByMlZ18Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Access all input items\nconst fullText = items.map(item => $('AI Agent').first().json.output || '').join('\\n\\n');\n\n// Simple HTML converter\nfunction basicMarkdownToHtml(text) {\n  return text\n    .replace(/^### (.*$)/gim, '<h3>$1</h3>')\n    .replace(/^## (.*$)/gim, '<h2>$1</h2>')\n    .replace(/^# (.*$)/gim, '<h1>$1</h1>')\n    .replace(/\\*\\*(.*?)\\*\\*/gim, '<strong>$1</strong>')\n    .replace(/\\*(.*?)\\*/gim, '<em>$1</em>')\n    .replace(/\\n\\n/g, '<br><br>')\n    .replace(/\\n/g, '<br>');\n}\n\n// Convert to HTML\nconst html = basicMarkdownToHtml(fullText);\n\n// Return single item with both HTML and raw text\nreturn [\n  {\n    json: {\n      html: html,\n      text: fullText\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        -288
+      ],
+      "id": "f3c4c77b-6fcd-438b-a4f6-1176af1f279e",
+      "name": "Format for Gmail"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Video URL": {
+      "main": [
+        [
+          {
+            "node": "Get Video ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video ID": {
+      "main": [
+        [
+          {
+            "node": "YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Comments": {
+      "main": [
+        [
+          {
+            "node": "Format Comments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Comments": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube": {
+      "main": [
+        [
+          {
+            "node": "Get Comments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack": {
+      "main": [
+        [
+          {
+            "node": "Format for Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format for Gmail": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "PbHR0Z5zx7xRFk9v"
+  },
+  "versionId": "239549d5-daaf-48fd-8de5-1af88b775209",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "Ie1e20sCR3rMSI4T",
+  "tags": []
+}

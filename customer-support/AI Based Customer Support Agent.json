@@ -1,0 +1,484 @@
+{
+  "name": "Demo-Support Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "sender": "taharafiq1@icloud.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "1104bb23-6a4e-4335-9abe-6545babd35fd",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "F8FhGJsXByMlZ18Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.Subject }}\n\n{{ $json.snippet }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Urgent",
+              "description": "If the content shows urgency"
+            },
+            {
+              "category": "Medium",
+              "description": "If content show neutral priority"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        -96
+      ],
+      "id": "9cb2577a-03d3-4d31-ab90-9bc3339c9198",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_1140015418988675117"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        -208
+      ],
+      "id": "a2d40a67-cc1b-47c0-9ba4-8e0b789b6dfb",
+      "name": "Priority Label",
+      "webhookId": "d60a9d37-f5de-4c3b-ade6-7342ee57c67b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "F8FhGJsXByMlZ18Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_542761409968482101"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        0
+      ],
+      "id": "b6ad4d60-6b9c-4506-9737-2fac04a66f09",
+      "name": "Medium Label",
+      "webhookId": "d60a9d37-f5de-4c3b-ade6-7342ee57c67b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "F8FhGJsXByMlZ18Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        800,
+        -96
+      ],
+      "id": "f863e51e-4e1f-4b4d-a4a1-52378525ef80",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.snippet }}",
+        "options": {
+          "systemMessage": "=You are a customer support agent,\nYour task is to check if you have enough resources via Tool \"Database\" to answer question or not.\nIf you can answer, provide the response from the tool.\nAlways Output as per the following JSON\n\n[{ \nsituation: can answer\nanswer:\n}]\n\nIf you do not have access to knowledge, reply \n\n[{\nsituation: can not answer\n}]\n\nIf you can answer, mention a proper customer support response in \"answer\" that will be replied to the email."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        -96
+      ],
+      "id": "cdfb3b0f-0e9b-42e4-af59-8471acde811f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1024,
+        128
+      ],
+      "id": "83b63ceb-c3c9-4b17-8991-384dc613cf93",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "https://docs.google.com/document/d/1OntTppITiLKRpl-4KdnoJGowV6DbDQ6j5va4eUXHYJE/edit?tab=t.0"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        192
+      ],
+      "id": "60fb4f96-8a98-4155-87ce-1522b621af64",
+      "name": "database",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "yA7sfYm4WZXuOOue",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a9c76efc-f1e3-4deb-9e16-30b9f13b23a0",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "can answer",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1392,
+        -96
+      ],
+      "id": "5fa5e263-3abc-422e-97db-5bb002de68f7",
+      "name": "Can answer"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code Node to extract answer from AI response\n// Input: Raw text response from AI containing situation and answer\n\n// Get the input data - try multiple possible locations\nconst inputData = $input.all()[0].json;\nconst inputText = inputData.output || \n                 inputData.text || \n                 inputData.data || \n                 inputData.response || \n                 inputData.content ||\n                 inputData.message ||\n                 JSON.stringify(inputData);\n\nconsole.log('Input data structure:', JSON.stringify(inputData, null, 2));\nconsole.log('Input text:', inputText);\n\ntry {\n  // Check if inputText exists and is a string\n  if (!inputText || typeof inputText !== 'string') {\n    throw new Error(`Invalid input: ${typeof inputText}. Expected string. Received: ${JSON.stringify(inputText)}`);\n  }\n  \n  // Parse the JSON string first (it's double-encoded)\n  let parsedResponse;\n  try {\n    parsedResponse = JSON.parse(inputText);\n  } catch (parseError) {\n    throw new Error(`Failed to parse JSON response: ${parseError.message}`);\n  }\n  \n  // Extract the first object from the array\n  const responseObj = Array.isArray(parsedResponse) ? parsedResponse[0] : parsedResponse;\n  \n  if (!responseObj || typeof responseObj !== 'object') {\n    throw new Error(`Invalid response structure: ${JSON.stringify(responseObj)}`);\n  }\n  \n  const situation = responseObj.situation;\n  const answer = responseObj.answer;\n  \n  // Return the extracted data\n  return [{\n    json: {\n      situation: situation,\n      answer: answer,\n      canAnswer: situation?.toLowerCase().includes('can answer'),\n      originalResponse: inputText\n    }\n  }];\n  \n} catch (error) {\n  // Error handling - return original data with error flag\n  return [{\n    json: {\n      error: true,\n      errorMessage: error.message,\n      situation: null,\n      answer: null,\n      canAnswer: false,\n      originalResponse: inputText\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        -208
+      ],
+      "id": "82e3b9f8-1307-41bc-afe5-a36e10ad3c23",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code Node to extract answer from AI response\n// Input: Raw text response from AI containing situation and answer\n\n// Get the input data - try multiple possible locations\nconst inputData = $input.all()[0].json;\nconst inputText = inputData.output || \n                 inputData.text || \n                 inputData.data || \n                 inputData.response || \n                 inputData.content ||\n                 inputData.message ||\n                 JSON.stringify(inputData);\n\nconsole.log('Input data structure:', JSON.stringify(inputData, null, 2));\nconsole.log('Input text:', inputText);\n\ntry {\n  // Check if inputText exists and is a string\n  if (!inputText || typeof inputText !== 'string') {\n    throw new Error(`Invalid input: ${typeof inputText}. Expected string. Received: ${JSON.stringify(inputText)}`);\n  }\n  \n  // Parse the JSON string first (it's double-encoded)\n  let parsedResponse;\n  try {\n    parsedResponse = JSON.parse(inputText);\n  } catch (parseError) {\n    throw new Error(`Failed to parse JSON response: ${parseError.message}`);\n  }\n  \n  // Extract the first object from the array\n  const responseObj = Array.isArray(parsedResponse) ? parsedResponse[0] : parsedResponse;\n  \n  if (!responseObj || typeof responseObj !== 'object') {\n    throw new Error(`Invalid response structure: ${JSON.stringify(responseObj)}`);\n  }\n  \n  const situation = responseObj.situation;\n  const answer = responseObj.answer;\n  \n  // Return the extracted data\n  return [{\n    json: {\n      situation: situation,\n      answer: answer,\n      canAnswer: situation?.toLowerCase().includes('can answer'),\n      originalResponse: inputText\n    }\n  }];\n  \n} catch (error) {\n  // Error handling - return original data with error flag\n  return [{\n    json: {\n      error: true,\n      errorMessage: error.message,\n      situation: null,\n      answer: null,\n      canAnswer: false,\n      originalResponse: inputText\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        0
+      ],
+      "id": "a0a6ba94-c0eb-4515-8a00-163d681bc1c1",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "message": "={{ $json.answer }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "AI Customer Support"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1824,
+        -208
+      ],
+      "id": "5904bff8-1f2c-4878-a477-554dbb439eba",
+      "name": "Reply to Customer",
+      "webhookId": "1a899405-1c34-45e2-9219-0a79f3267b57",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "F8FhGJsXByMlZ18Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "outcommerce1@gmail.com",
+        "subject": "=FW:  {{ $('Gmail Trigger').item.json.Subject }}",
+        "message": "=FW: {{ $('Gmail Trigger').item.json.snippet }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "",
+          "replyTo": "={{ $('Gmail Trigger').item.json.From }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1824,
+        0
+      ],
+      "id": "a8bf22f2-e9a2-4044-8aeb-2b1492320a9e",
+      "name": "Forward to team",
+      "webhookId": "383cc46e-5aa9-479a-90fe-73cfb868b472",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "F8FhGJsXByMlZ18Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        304,
+        128
+      ],
+      "id": "e1137f14-bfeb-422c-9026-46f309ab0564",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Priority Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Medium Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Priority Label": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Medium Label": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "database": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Can answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Can answer": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Reply to Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Forward to team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0dbcf6fd-d93e-4d95-a662-8cd2319b0c39",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "HueVPEwnU5auQdvS",
+  "tags": []
+}

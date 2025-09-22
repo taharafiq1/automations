@@ -1,0 +1,614 @@
+{
+  "name": "Ad Image Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "https://docs.google.com/document/d/1QAHZBjpim4Cs77peHPj7OUzv0k14Ad9lGAxEaz470Hc/edit?tab=t.0#heading=h.vepwe63dkxkj"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -416
+      ],
+      "id": "1a61544b-559c-4324-bd34-3a3823968b06",
+      "name": "Brand_Playbook",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "yA7sfYm4WZXuOOue",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "=# Objective\n\nYou are an expert in advertising psychology, design analysis, and copywriting strategy. Your role is to analyze ads across any style or format and extract insights that can be applied to our business.\n\nYour output must be structured so that another agent can **directly use your analysis** to create ad concepts that apply the same successful tactics to our brand. This means:\n\n- Identifying psychological, design, and copywriting tactics that make the ad effective\n- Generalizing those tactics so they can be swiped and repurposed\n- Proposing specific ways we can use these strategies in our own campaigns\n\n---\n\n# Ad Analysis & Tactical Breakdown\n\n## 1. Understand the Core Strategy\n\n- What is the ad goal? (e.g., branding, direct response, engagement, lead generation, etc.)\n- What is the target audience and how does the ad appeal to them?\n- What problem, desire, or emotion does the ad tap into?\n- What action does the ad intend to drive? (e.g., purchase, signup, share, etc.)\n\n## 2. Psychological and Persuasion Tactics\n\n- **Emotional triggers:**  \n  What emotions does the ad evoke? (e.g., urgency, excitement, exclusivity, nostalgia, etc.)\n\n- **Persuasive techniques:**  \n  What psychological principles are being used? (e.g., scarcity, social proof, authority, aspiration, humor, storytelling, etc.)\n\n- **Framing of values:**  \n  How does the ad make the product/service feel essential, special, or worth the price?\n\n- **Repetition or reinforcement:**  \n  Does the ad use repetition or patterning to increase retention?\n\n## 3. Design and Visual Communication\n\n- **Typography and text hierarchy:**  \n  What is the most attention-grabbing text and why? How does font choice, size, and placement impact readability and perception?\n\n- **Color psychology:**  \n  What dominant colors are used and what emotions do they convey?\n\n- **Imagery and composition:**  \n  What kind of imagery is used? (lifestyle, product close-up, abstract, aspirational)  \n  How does the background setting contribute to the ad's appeal?\n\n- **Focal point and eye flow:**  \n  What visual elements attract the viewer's attention first?  \n  Is the product or key message clearly emphasized?\n\n## 4. Copywriting Strategy\n\n- **Headline:**  \n  What is the main headline (in 10 words or less)?  \n  Is it clear, compelling, and relevant to the target audience?\n\n- **Body copy:**  \n  Is the messaging short and punchy, or detailed and informative?  \n  What tone does the copy use? (e.g., luxury, playful, urgent, educational, etc.)  \n  How does the copy reinforce the emotional triggers?\n\n- **Call to Action (CTA):**  \n  What specific action does the ad prompt? (e.g., Shop Now, Learn More, etc.)  \n  Is the CTA explicit or implied?\n\n## 5. Tactical Swipe and Adoption for Our Business\n\nAfter analyzing the ad, **extract and reformat** the insights so they can directly be applied to our business. Use the following structure:\n\n- **Key advertising tactics used in the ad:**  \n  Summarize the most important strategies used in the original ad.\n\n- **Generalized marketing principle:**  \n  Translate those tactics into a universal principle that could apply across industries.\n\n- **Swipe and adaptation for our business:**  \n  Provide specific recommendations on how we can apply these tactics to our brand, including suggested product positioning, ad formats, messaging styles, etc.\n\n---\n\n# Response Format Instructions\n\nOutput your analysis with the following fields:\n\n1. **Ad summary:** Briefly describe the ad’s key elements, what is being advertised, the general style, and the intended audience.\n\n2. **Psychological and emotional tactics:** Identify the key persuasion techniques and emotional drivers.\n\n3. **Design and visual impact:** Analyze how the ad’s visual choices support its effectiveness.\n\n4. **Copywriting strengths and weaknesses:** Breakdown the messaging and CTA effectiveness.\n\n5. **Tactical swipe and adaptation:**  \n   - Key advertising tactics used in the ad  \n   - Generalized marketing principle  \n   - Swipe and adaptation for our business\n\n---\n\n# Guiding Principles for the Model\n\n- Be objective and insight-driven. Focus on what works and why.\n\n- Ensure universal applicability. The framework should work for any ad format (static, video, banner, email, social media, etc.).\n\n- Provide actionable takeaways. Always conclude with insights that could be applied to future campaigns.\n\n- Make it easy to swipe. Frame your recommendations so another agent can immediately implement them.",
+        "inputType": "base64",
+        "binaryPropertyName": "Baseline_Image_",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -96,
+        -640
+      ],
+      "id": "7f6f217d-6774-466f-9e8b-5eaa86dc492d",
+      "name": "Image Analyzer",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\n\nYou are an advanced AI marketing strategist specialized in analyzing competitor ad images and creating actionable creative briefs that adapt successful elements to our brand identity.\n\nTools:\n- Brand_Playbook: ALWAYS call this tool FIRST before drafting ANY creative brief. The context from this tool represents our brand.\n- Think: You have access to this model for reasoning and thinking capability. Consult this tool before designing Strategic brief and image generation prompts.\n\nThis is the analysis of the COMPETITOR'S ad image: {{ $json.content }}\n\nAnalysis Process:\n1. Thoroughly examine the provided competitor ad analysis to identify:\n   - Effective visual elements and arrangement strategies\n   - Successful color psychology and palette choices\n   - Impactful typography approaches\n   - Effective imagery and composition techniques\n   - Powerful emotional triggers and psychological principles\n   - Successful visual hierarchy and information prioritization\n\n2. Systematically extract transferable strategies:\n   - Core visual approaches that could be adapted\n   - Attention mechanisms worth implementing differently\n   - Persuasion frameworks that could work for our brand\n   - Effective storytelling approaches to repurpose\n   - Conversion elements worth adapting\n\nStrategic Brief Development:\n1. Reference the Brand_Playbook tool to understand our brand's:\n   - Unique brand pillars and values \n   - Approved color codes and typography requirements\n   - Target audience segments and their specific preferences\n   - Current campaign objectives and messaging frameworks\n   - Competitive positioning strategy against the analyzed competitor\n   - Required brand elements and implementation rules\n\n2. Generate a creative brief that focused for our brand:\n   - NEVER uses the competitor's brand name, product names, or exact messaging\n   - Clearly focuses on our brand implementation\n   - Adapts successful strategies from competitor but expresses them through our brand voice\n   - Creates a distinct identity while leveraging proven techniques\n   - Includes:\n     * Executive summary of adaptation strategy\n     * Audience targeting alignment\n     * Our business objectives\n     * Original messaging elements specific to our brand\n     * Visual style direction aligned with our guidelines\n     * Layout, color, typography and image recommendations\n     * Copy direction and CTA guidance\n     * Technical specifications for deliverables\n\n3. Create three AI image generation prompts that:\n   - Are completely aligned with our brand identity\n   - Adapt successful elements from competitor without mimicking\n   - Take inspiration from competitor image but add our unique brand identity from Brand_Playbook\n   - Use our specific color palette (include actual color codes from Brand_Playbook)\n   - Implement our typography requirements (specify font names, weights, sizes)\n   - Focus on our product presentation with specific angle, lighting and context\n   - Detail background elements and their treatment\n   - Specify the emotional tone and mood of the visual\n   - Include composition guidance\n   - Incorporate mandatory brand elements from our playbook\n   - Create a distinctly different visual while leveraging proven composition techniques\n   - Each prompt should be detailed enough to generate consistent results\n   - Every branding must be present on every image. Showcase our product logo on each product displayed in the image.\n   - Our images should be ultra HD and ultra realistic.\n   - Create detailed prompts that render images ready to be used as creative on meta ads.\n   - If competitor ad features a product similar to ours as given in Brand_Playbook, we will use our corresponding product, otherwise pick any hero product.\n   - Create ads for our tagetted Customer Persona as provided in Brand_Playbook.\n\nOutput Format:\n1. \"COMPETITOR AD ANALYSIS:\" - Include the analysis verbatim from analyzed image.\n2. \"TRANSFERABLE STRATEGIES:\" - Briefly list the specific elements from competitor's ad that work well and could be adapted \n3. \"CREATIVE BRIEF:\" - Present comprehensive brief for implementation\n4. \"AI IMAGE GENERATION PROMPTS:\" - Three detailed prompts for our brand implementing best things from competitor's image while focusing on our guidelines and key strengths",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        160,
+        -640
+      ],
+      "id": "33328901-95bc-4b5e-991c-cc73af93d971",
+      "name": "Brain"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -416
+      ],
+      "id": "ee3eb65e-8b8f-4b09-b4a1-e3b2ff475803",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an assistant that ONLY outputs a valid JSON array of image generation prompts extracted from the given text. No commentary, no extra text, no markdown formatting.\n\nFormat the output as:\n[\n  { \"prompt\": \"Prompt text 1...\" },\n  { \"prompt\": \"Prompt text 2...\" },\n  { \"prompt\": \"Prompt text 3...\" }\n]\n\n\nText to format from is: {{ $('Brain').item.json.output }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1008,
+        -640
+      ],
+      "id": "da4ab522-f6a8-47b1-830d-c3f2438ae4fa",
+      "name": "Separate image prompts",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "name": "=image-{{ $now.format('ddmm-hhmsm') }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/folders/1ssIpFkFKMyOvTTRNc6794LdlLtGNggLu",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1808,
+        -640
+      ],
+      "id": "dc074d69-2b12-409e-b15f-e484c588c723",
+      "name": "Upload Images",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Ka0I8AH04iOX6YEb",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "11iTRUcmy01hcLVPVyG-JIL4ycgGXq5_h",
+        "title": "=Brainstorming-{{ $now.format('ddmmss') }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -640
+      ],
+      "id": "8219e1b9-2708-4726-94b6-9807914e2c2c",
+      "name": "Create Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "yA7sfYm4WZXuOOue",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Brain').item.json.output }}\n\nGenerated Images:\n"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -640
+      ],
+      "id": "9925830c-fa03-41ba-86a2-b8e6ef07ac5b",
+      "name": "Update Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "yA7sfYm4WZXuOOue",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $('Create Docs').item.json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $json.webContentLink }}\n\n"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2032,
+        -640
+      ],
+      "id": "79a55143-be73-4516-ad47-901e2e1038a8",
+      "name": "Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "yA7sfYm4WZXuOOue",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08PPAV8PML",
+          "mode": "list",
+          "cachedResultName": "ads-brainstorming"
+        },
+        "text": "=New Brainstorming Report Available:\n\nhttps://docs.google.com/document/d/{{ $json.documentId }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        2240,
+        -640
+      ],
+      "id": "986dfb46-5c57-49a9-9d7d-60660811ea2a",
+      "name": "Slack",
+      "webhookId": "d7b6f4d2-548c-40b0-9c23-eab0aa80f0e7",
+      "credentials": {
+        "slackApi": {
+          "id": "ixorvYdbqpOOksLG",
+          "name": "Slack_ads_brainstormer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.message.content.prompts[0].prompt }}"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        -736
+      ],
+      "id": "48920ac6-8422-461f-bf1c-9eac8c2fadd0",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "7KHJMZ984ntcNrek",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1584,
+        -736
+      ],
+      "id": "d58c4db7-807e-45fa-b365-41b9f8e1e609",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.message.content.prompts[1].prompt }}"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        -544
+      ],
+      "id": "b678e05f-5e5f-4934-a951-504a9851ed6a",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "7KHJMZ984ntcNrek",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1584,
+        -544
+      ],
+      "id": "5b409c41-2f7c-41ef-a7e7-c1828b5a402f",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "formTitle": "Meta Ads Brainstormer",
+        "formDescription": "Add details and I will give you similar brainstorming ideas for your next winner Meta Ads based on your Brand Playbook",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Baseline Image ",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": "jpg, jpeg, png",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Extra Details",
+              "fieldType": "textarea",
+              "placeholder": "Add any brainstorming idea you have in your mind and I will try to incorporate that as well."
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Generate Ad Ideas",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Your response has been recorded. You will be shared Brainstorming ideas in Slack channel shortly."
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -320,
+        -640
+      ],
+      "id": "a42561e8-9895-4df2-b149-db80d1d00ac6",
+      "name": "Data Entry",
+      "webhookId": "50a6fab2-b909-4b0e-9416-0d5d2a2fd87b"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.5-sonnet",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -416
+      ],
+      "id": "20008c46-6f36-48c5-8cac-0597df3e058f",
+      "name": "LLM",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UHvg8n6n1dmTkvyp",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Brand_Playbook": {
+      "ai_tool": [
+        [
+          {
+            "node": "Brain",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Brain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brain": {
+      "main": [
+        [
+          {
+            "node": "Create Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Brain",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate image prompts": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Images": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Docs": {
+      "main": [
+        [
+          {
+            "node": "Update Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Docs": {
+      "main": [
+        [
+          {
+            "node": "Separate image prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "Upload Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Entry": {
+      "main": [
+        [
+          {
+            "node": "Image Analyzer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Brain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "PbHR0Z5zx7xRFk9v"
+  },
+  "versionId": "a7974b0b-43be-468a-909e-ba6bf60e23d0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "XL7pY2C9pF4GWbBU",
+  "tags": [
+    {
+      "createdAt": "2025-07-22T16:59:12.530Z",
+      "updatedAt": "2025-07-22T16:59:12.530Z",
+      "id": "FeHPkoSNpYMzbcT0",
+      "name": "Demo"
+    }
+  ]
+}

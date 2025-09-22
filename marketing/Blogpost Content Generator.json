@@ -1,0 +1,534 @@
+{
+  "name": "Blog Content Generator",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        32
+      ],
+      "id": "7b282a06-28a5-46a3-8d50-7e291cd0ce38",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "17zr6ZDS1neVZ2oJQPaZjYj1IbX1eYi-ygXUEJLbEKjQ",
+          "mode": "list",
+          "cachedResultName": "Demo-Content Generator",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17zr6ZDS1neVZ2oJQPaZjYj1IbX1eYi-ygXUEJLbEKjQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17zr6ZDS1neVZ2oJQPaZjYj1IbX1eYi-ygXUEJLbEKjQ/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        208,
+        -80
+      ],
+      "id": "cbbd82b2-6305-43d2-b363-1800d581d4f9",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic to research on is:\n{{ $json.Topic }}",
+        "options": {
+          "systemMessage": "=You are a helpful Deep research agent.\nYou task is to get latest information, trends and practices for provided topics.\nTry to get factual data, do not assume anything.\n\nGive output as much as possible, output from you will be fed to another LLM for creating a Blog post and an infographic image to be shared on social media.\n\nDate/Time : {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        464,
+        -80
+      ],
+      "id": "d6c6020b-01e2-412f-a558-02e1a4894742",
+      "name": "Research Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=You are world class SEO Blog post writer, your task is to write a engaging, well-structured, SEO-optimized blog post of ~600 words on the given topic.\n\nInclude an intro, 3 sections, and a conclusion.\nEmbed high volume keywords so my article gets ranked easily. Write the article as humanly as possible.\n\nDate/Time : {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        864,
+        -80
+      ],
+      "id": "f8993e8c-7981-468b-a495-42a13fb1012d",
+      "name": "Blog Post Agent"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-sonnet-4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        912,
+        144
+      ],
+      "id": "6b2a2b52-6063-42f5-9123-7f8f990abf58",
+      "name": "Claude Sonnet-4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UHvg8n6n1dmTkvyp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "perplexity/sonar",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        432,
+        144
+      ],
+      "id": "c23f876d-97a7-4686-9570-20f83da7ff67",
+      "name": "Perplexity",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UHvg8n6n1dmTkvyp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        144
+      ],
+      "id": "9c38f3b5-9ad2-4768-9fba-75c52bc95855",
+      "name": "OpenAI",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UHvg8n6n1dmTkvyp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Research Agent').item.json.output }}",
+        "options": {
+          "systemMessage": "=You are a image Prompt Generator Agent,\n\nYour task is to create a prompt for detailed infographic which will be posted to instagram and linkedin.\n\nIMPORTANT:\n\nJust give me the prompt nothing else. \n\nOutput Example:\n\nPrompt: \"Create a light colored themed infographic image ...\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        -80
+      ],
+      "id": "fd6a8e9f-9eae-46a2-bd6e-516591826c5f",
+      "name": "Infographic Agent"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "model": "gpt-image-1",
+        "prompt": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1584,
+        -80
+      ],
+      "id": "21941a5c-220c-4d3d-8c18-0b0332f86f6e",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "trbeEICTmH3jQkwY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Get row(s) in sheet').item.json.Topic }}-{{ $now.format('hhmmss') }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/folders/12WSHGQ5px-QCA2LpDhJDm9M5xfPTk_O4",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1808,
+        -80
+      ],
+      "id": "1c65fae6-36f6-4416-8420-3bcf5be2ecf4",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Ka0I8AH04iOX6YEb",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "12WSHGQ5px-QCA2LpDhJDm9M5xfPTk_O4",
+        "title": "={{ $('Get row(s) in sheet').item.json.Topic }}-{{ $now.format('hhmmss') }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2032,
+        -80
+      ],
+      "id": "852b71f2-44b3-43e2-97cc-871ee15af810",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "yA7sfYm4WZXuOOue",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "=Infographic Created:\n\n{{ $('Upload file').item.json.webViewLink }}\n"
+            },
+            {
+              "object": "pageBreak",
+              "action": "insert"
+            },
+            {
+              "action": "insert",
+              "text": "=BLOG POST:\n\n{{ $('Blog Post Agent').item.json.output }}"
+            },
+            {
+              "object": "pageBreak",
+              "action": "insert"
+            },
+            {
+              "action": "insert",
+              "text": "=RESEARCH CONDUCTED\n\n{{ $('Research Agent').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        -80
+      ],
+      "id": "67f2fd48-6bd6-4d7f-9e5c-e6d92aaa55cb",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "yA7sfYm4WZXuOOue",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "17zr6ZDS1neVZ2oJQPaZjYj1IbX1eYi-ygXUEJLbEKjQ",
+          "mode": "list",
+          "cachedResultName": "Demo-Content Generator",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17zr6ZDS1neVZ2oJQPaZjYj1IbX1eYi-ygXUEJLbEKjQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17zr6ZDS1neVZ2oJQPaZjYj1IbX1eYi-ygXUEJLbEKjQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic": "={{ $('Get row(s) in sheet').item.json.Topic }}",
+            "Infographics": "={{ $('Upload file').item.json.webViewLink }}",
+            "Blog Post": "=https://docs.google.com/document/d/{{ $json.documentId }}"
+          },
+          "matchingColumns": [
+            "Topic"
+          ],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Blog Post",
+              "displayName": "Blog Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Infographics",
+              "displayName": "Infographics",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2464,
+        -80
+      ],
+      "id": "88d853cd-665a-47f8-be1b-5e6fd24e81ec",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        -176
+      ],
+      "id": "ba460391-f607-413d-86e2-0e3f201471da",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Agent": {
+      "main": [
+        [
+          {
+            "node": "Blog Post Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude Sonnet-4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Blog Post Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Blog Post Agent": {
+      "main": [
+        [
+          {
+            "node": "Infographic Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Infographic Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Infographic Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a8979bae-a716-4bf9-a515-3479186edd3c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "eXsd7mVPbH79MwyD",
+  "tags": [
+    {
+      "createdAt": "2025-07-22T16:59:12.530Z",
+      "updatedAt": "2025-07-22T16:59:12.530Z",
+      "id": "FeHPkoSNpYMzbcT0",
+      "name": "Demo"
+    }
+  ]
+}

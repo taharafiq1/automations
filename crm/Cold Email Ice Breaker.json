@@ -1,0 +1,494 @@
+{
+  "name": "Cold Email Ice Breaker",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f1d989cd-1598-437a-94dc-9add9e0ab288",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1zOj9IWixgU3It83MaiHvDhDPUg-UACDISU8zEeSGLbQ",
+          "mode": "list",
+          "cachedResultName": "Saudi Arabia Companies",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zOj9IWixgU3It83MaiHvDhDPUg-UACDISU8zEeSGLbQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1638846717,
+          "mode": "list",
+          "cachedResultName": "Email List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zOj9IWixgU3It83MaiHvDhDPUg-UACDISU8zEeSGLbQ/edit#gid=1638846717"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Ice Breaker"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        192,
+        0
+      ],
+      "id": "d5635915-6915-43b8-b237-2a00066a482a",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        560,
+        0
+      ],
+      "id": "a5bd313b-6d4c-459b-9a18-b772cf7a6202",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "maxItems": 3
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        368,
+        0
+      ],
+      "id": "87e3b940-8682-475e-84f4-7201293e317d",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.Website }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        784,
+        112
+      ],
+      "id": "b526347e-e326-4b22-9ce6-2ac463f1898f",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08PBRQ0SNS",
+          "mode": "list",
+          "cachedResultName": "web-change"
+        },
+        "text": "Workflow finished- Ice breaker done",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        768,
+        -224
+      ],
+      "id": "21466662-11d0-44ae-809e-895e63c0c2a6",
+      "name": "Send a message",
+      "webhookId": "7fe3e18e-7fab-48bf-ac07-67672a2b84c9",
+      "executeOnce": true,
+      "credentials": {
+        "slackApi": {
+          "id": "uc2x5EBnyRdtdFLg",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a B2B cold outreach expert. Based on the following website content, generate:\n\n1. A catchy email subject line that grabs attention directed to specific business and forces .\n2. A personalized icebreaker (1-2 lines) showing you've done research and understand what they do.\n\n\n\nKeep in mind we are offering First Aid training to companies within Saudi Arabia and reaching out to this business through this first email. Do not directly mention training in this icebreaker but subtly hint at it.\n\nReturn the output in **JSON format** like this:\n{\n  \"subject\": \"...\",\n  \"icebreaker\": \"...\"\n}\n\n!! Important: Do not mention anything other than Icrebreaker, output from your end goes straight into the email.\n\n\nWebsite Content:\n\n\n{{ $('Code').item.json.cleaned }}\n\n",
+        "options": {
+          "systemMessage": "You're a B2B marketing expert."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        112
+      ],
+      "id": "22b885ae-e85f-4219-899f-59f7e3c51c01",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        384
+      ],
+      "id": "a3b8b381-bad4-4568-adf8-fbf60c4a040c",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "UHvg8n6n1dmTkvyp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let html = $json[\"data\"];\nhtml = html.replace(/<script[\\s\\S]*?<\\/script>/gi, '');\nhtml = html.replace(/<style[\\s\\S]*?<\\/style>/gi, '');\nhtml = html.replace(/<[^>]+>/g, ''); // strip tags\nhtml = html.replace(/\\s+/g, ' '); // compress whitespace\nreturn [{ json: { cleaned: html } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        112
+      ],
+      "id": "633ef778-11e9-4921-926c-96b79baff1a5",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1zOj9IWixgU3It83MaiHvDhDPUg-UACDISU8zEeSGLbQ",
+          "mode": "list",
+          "cachedResultName": "Saudi Arabia Companies",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zOj9IWixgU3It83MaiHvDhDPUg-UACDISU8zEeSGLbQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1638846717,
+          "mode": "list",
+          "cachedResultName": "Email List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zOj9IWixgU3It83MaiHvDhDPUg-UACDISU8zEeSGLbQ/edit#gid=1638846717"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Website": "={{ $('Get row(s) in sheet').item.json.Website }}",
+            "Ice Breaker": "={{ $json.icebreaker }}",
+            "Subject": "={{ $json.subject }}"
+          },
+          "matchingColumns": [
+            "Website"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Industry",
+              "displayName": "Industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email found from",
+              "displayName": "Email found from",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email 1",
+              "displayName": "Email 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email 2",
+              "displayName": "Email 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email 3 ",
+              "displayName": "Email 3 ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email 4",
+              "displayName": "Email 4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email 5",
+              "displayName": "Email 5",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ice Breaker",
+              "displayName": "Ice Breaker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Body",
+              "displayName": "Email Body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2208,
+        112
+      ],
+      "id": "3e8ca431-a057-4b06-aab0-0876a24b010d",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eMzqJZcfzdON4JAW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawOutput = $input.first().json.output;\n\n// Remove markdown-style code block (```json ... ```)\nconst cleaned = rawOutput.replace(/```json|```/g, '').trim();\n\nlet parsed;\ntry {\n  parsed = JSON.parse(cleaned);\n} catch (error) {\n  throw new Error(\"Failed to parse LLM JSON output: \" + error.message);\n}\n\nreturn [\n  {\n    json: {\n      subject: parsed.subject,\n      icebreaker: parsed.icebreaker\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        112
+      ],
+      "id": "7329e65a-b4f6-4f88-8b0a-df03277c9634",
+      "name": "Code1"
+    }
+  ],
+  "pinData": {
+    "Code": [
+      {
+        "json": {
+          "cleaned": " Project Support Trading EST. Home About Services Products Agency Contact Us Call Us Get A Quote Contact Info 205 Makkah Tower, Makkah Street Thouqbah, Saudi Arabia +966 50 248 0415 sales@pstrd.com Get A Quote STREAMLINED ENERGY SOLUTIONS We specialize in products and services tailored for the Oil &amp; Gas and Industrial Sectors, offering tailored services, timely delivery, and sustainable energy solutions. Know More Contact Us EXEMPLARY CONSTRUCTION SERVICES With a professional approach, we deliver construction services that reflect our commitment to excellence, precision, and client satisfaction. Know More Contact Us Project Support Trading stands as a foremost company in Saudi Arabia, providing an extensive array of Products and Services tailored for the Oil &amp; Gas, Construction, and Industrial Sectors. Renowned for our unwavering commitment to Quality, Reliability, and exceptional Customer Service, we take pride in our position as a leading supplier of Gaskets in the Eastern Province of Saudi Arabia. 0 + YEARS OF EXPERIENCE ABOUT US DEPENDING ON YOUR NEEDS We provide all facilities to the workforce as per Saudi Labor Law and this setup has proved to be the strategy of our persistent success. We have also an efficient group of persons for management. 5 + Years of Experience About us Depending on yours need We provide all facilities to the workforce as per Saudi Labor Law and this setup has proved to be the strategy of our persistent success. We have also an efficient group of persons for management. 01 INDUSTRIAL SUPPLIES 02 SAFETY SUPPLIES 03 AIRLOOP &amp; H2S SUPPLIES 04 ELECTRICAL &amp; CABLE SUPPLIES 05 HANDLING TOOL SUPPLIES 06 CONSTRUCTION MATERIAL SUPPLIES 07 SCAFFOLDING &amp; SCAFF PAD SUPPLIES 08 WELDING SUPPLIES OIL &amp; GAS SOLUTIONS We offer a wide array of specialized products and services designed for the oil and gas sector. From state-of-the-art drilling tools to streamlined transportation solutions, our offerings guarantee smooth operations, improved efficiency, and unwavering safety standards. INDUSTRIAL SOLUTIONS We provide a comprehensive suite of industrial services and products meticulously crafted to enhance manufacturing efficiency and innovation. From cutting-edge technologies to strategic process optimization, our solutions empower industries to thrive in today's competitive landscape. Who We Are Our Vision What We Have Safety first 01 Any kind project planning About us WHO WE ARE At Project Support Trading, we offer unmatched expertise, premium products, and dedicated professionals in the Oil &amp; Gas, Construction, and Industrial sectors. Our foundation rests on trust, quality, and enduring success. Learn More 01 Best Facade Engineering About us OUR VISION Project Support Trading is committed to redefining industry standards through quality, reliability, and innovation. We envision being the premier choice in the Oil &amp; Gas, Construction, and Industrial sectors, fostering partnerships and shaping a sustainable future. Learn More 01 We Do Tiling &amp; Painiting About us WHAT WE HAVE Our comprehensive range of Gaskets, spanning both Metal and Non-Metal varieties, is meticulously curated to meet the diverse needs of our esteemed clientele. Additionally, we offer a wide array of Safety and Rescue products, along with an extensive selection of Industrial Supplies. Learn More 01 About us standing on pure need From headwear to fall protection, our selection features high-quality gear for comprehensive safety. Including respiratory, hand, and body protection, our range guarantees safety in all work environments. Learn More Groth Description Crafting Projects with Precision WAREHOUSING SOLUTION TURN KEY SOLUTION OUTDOOR WORKS CIVIL WORKS CONSTRUCTION We specialize in supplying superior construction materials to our partners, ensuring the highest quality in every project. Our commitment to excellence and sustainability drives us to redefine industry standards, presenting the best range of products and services to our esteemed partners. Know More Crafting Projects with Precision WAREHOUSING SOLUTION TURN KEY SOLUTION OUTDOOR WORKS CIVIL WORKS Know More CONSTRUCTION We specialize in supplying superior construction materials to our partners, ensuring the highest quality in every project. Our commitment to excellence and sustainability drives us to redefine industry standards, presenting the best range of products and services to our esteemed partners. Projects Our Main Divisions Construction Hilix Compund Villa Leading Suppliers of Gaskets We offer a wide range of Gaskets, both Metal and Non-Metal , to meet the needs of our customers.And the wide variety of gaskets includes Metallic gaskets, Non Metallic gaskets, Semi Metallic gaskets, Camprofile Gaskets. Download Brochure We're Determined To Give You Best Service Ever Ceritified ISO 9001 - 2008 The leading Company for Industrial Solutions Excellent Quality &amp; Reliability FAQ Get every single answers here. What are Project Support Trading's services and industries? Project Support Trading offers a comprehensive range of products and services in the Oil &#038; Gas, Construction, and Industrial sectors. Our services encompass supplying gaskets, industrial equipment, safety gear, and specialized products tailored to the unique needs of these industries. What safety equipment and standards does PST offer? PST provides a variety of safety equipment, including head protection, eye and hearing protection, respiratory gear, and fall protection solutions. We prioritize stringent safety standards to ensure the well-being of our clients and their workforce. What sets PST apart in terms of product quality and reliability? PST has gained a reputation for delivering high-quality products, including gaskets and industrial supplies, known for their durability and reliability. We source materials from trusted suppliers, ensuring the longevity and performance of our products. How does PST assist clients in making informed decisions for their projects? Our team of highly trained professionals offers free consultations and quotations, guiding clients through product selection and project requirements. With our expert advice, clients can make well-informed choices tailored to their specific needs and objectives. About us Project Support Trading is a leading company in Saudi Arabia that offers a wide range of Products and Services for the Oil & Gas, Construction, and Industrial Sectors. Quick LinksHome About Services Products Contact Us ServicesIndustrial Solutions Warehousing Solution Turn Key Solutions Outdoor Works Civil Works Contact 205 Makkah Tower, Makkah Street Thouqbah, Al Khobar 31952 Kingdom of Saudi Arabia Opening Hours Mon - Sun 8:30 - 18:00, Friday - CLOSED +966 50 248 0415 +966 53 083 8896 sales@pstrd.com Copyright ©2023 Project Support Trading EST. All Rights Reserved "
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c027b060-6ede-4c48-a2da-cc08f3da6f66",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94946a2d10c535694da679838317663f77bd6434327f2d99052b1b238b77c2ec"
+  },
+  "id": "Jg6clvZDoJs6UQ6T",
+  "tags": []
+}
